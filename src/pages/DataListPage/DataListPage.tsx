@@ -3,8 +3,9 @@ import Container from "react-bootstrap/Container";
 import { fluid } from 'config/config';
 import DataListPageContent from "./components/DataListPageContent";
 import DataListPageHeader from "./components/DataListPageHeader";
+import { memo } from "react";
 
-const DataListPage = () => {
+const DataListPage = memo(() => {
   return (
     <Container fluid={fluid}>
       <Row>
@@ -15,6 +16,6 @@ const DataListPage = () => {
       </Row>
     </Container>
   );
-};
+});
 
 export default DataListPage;

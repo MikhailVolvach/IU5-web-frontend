@@ -1,8 +1,9 @@
 import Container from "react-bootstrap/Container";
 import {Col, Row} from "react-bootstrap";
 import CustomCard from "ui/CustomCard";
-import Icon from "ui/Icon";
 import {ButtonType} from "config/types.ts";
+import { Link } from "react-router-dom";
+import { memo } from "react";
 
 const cards = [
   {
@@ -50,26 +51,29 @@ const cards = [
 const CardButtonsArr : ButtonType[] = [
   {
     buttonName: 'add',
-    buttonContent: <Icon iconName={'FolderPlus'} />
+    buttonContent: <div className={'d-flex flex-nowrap justify-content-center align-content-center'}>Добавить</div>
+  },
+  {
+    buttonName: 'remove',
+    buttonContent: <div className={'d-flex flex-nowrap justify-content-center align-items-center'}>Удалить</div>
   }
 ]
 
-const DataListPageContent = () => {
+const DataListPageContent = memo(() => {
   return (
     <>
       <Container >
         <Row xs={1} sm={1} md={2} lg={3} xl={4}>
           {cards.map(card => (
-            <Col className={'text-center gy-4'}>
+            <Col key={`${card.title}`} className={'text-center gy-4'}>
+              <Link to={'/data/1'} className={'link-underline link-underline-opacity-0'}>
               <CustomCard
                 loading={false}
                 title={card.title}
                 text={card.text}
-                buttonText={card.buttonText}
-                // badgeText={card.badgeText}
-                // badgeState={card.badgeState}
-                // img={card.img}
+                buttonsArr={CardButtonsArr}
               />
+              </Link>
             </Col>
           ))}
         </Row>
@@ -78,6 +82,6 @@ const DataListPageContent = () => {
 
     </>
   );
-};
+});
 
 export default DataListPageContent;

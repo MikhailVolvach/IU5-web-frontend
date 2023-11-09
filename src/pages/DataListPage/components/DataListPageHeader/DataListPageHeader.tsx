@@ -4,13 +4,13 @@ import {Button, Form, Nav} from "react-bootstrap";
 import {EBootstrapColor} from "config/enums.ts";
 import Icon from "ui/Icon";
 import CustomBadge from "ui/CustomBadge";
-import {FC} from "react";
+import {FC, memo} from "react";
 
 interface IDataListPageHeader {
   itemsInCart?: number;
 }
 
-const DataListPageHeader: FC<IDataListPageHeader> = ({itemsInCart}) => {
+const DataListPageHeader: FC<IDataListPageHeader> = memo(({itemsInCart}) => {
   return (<Header fluid={fluid}>
     <Nav fill className="justify-content-end w-100">
         <Form className={'d-flex'}>
@@ -26,6 +26,6 @@ const DataListPageHeader: FC<IDataListPageHeader> = ({itemsInCart}) => {
         </Button>
     </Nav>
   </Header> );
-};
+});
 
 export default DataListPageHeader;

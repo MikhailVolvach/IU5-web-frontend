@@ -1,22 +1,32 @@
 import {FC, memo} from "react";
-import {Button, Card, Placeholder, PlaceholderButton } from "react-bootstrap";
+import {Button, Card, Col, Container, Placeholder, PlaceholderButton, Row} from "react-bootstrap";
+import {ButtonType} from "config/types.ts";
 
 export interface ICustomCardBody {
     title?: string;
     text?: string;
-    buttonText?: string;
-    loading: boolean;
-    buttonsArr:
+    loading?: boolean;
+    buttonsArr: ButtonType[],
 }
 
-const CustomCardBody: FC<ICustomCardBody> = memo(({ title = "", text = "", buttonText = "" , loading=false}) => {
+const CustomCardBody: FC<ICustomCardBody> = memo(({ title = "", text = "", loading=false, buttonsArr}) => {
     return (
       <Card.Body>
           {loading || !title ? <Placeholder as={Card.Title} animation="glow"><Placeholder xs={6} /></Placeholder> : <Card.Title>{title}</Card.Title>}
           {loading || !text ? <Placeholder as={Card.Text} animation="glow">
                 <Placeholder xs={10}/>{' '}
                 <Placeholder xs={10} /></Placeholder> : <Card.Text>{text}</Card.Text>}
-          {loading || !buttonText ? <PlaceholderButton variant="primary" xs={5} /> : <Button variant="primary" >{buttonText}</Button>}
+          <Container>
+              <Row xs={1} sm={2}>
+                  {buttonsArr.map((button) => (
+                    <Col xs={12} sm={6} className={'p-1'}>
+                        {loading || !button.buttonContent ? <PlaceholderButton className={'w-100'} key={button.buttonName} variant="primary" xs={5} /> : <Button className={'w-100'} key={button.buttonName} variant="primary" >{button.buttonContent}</Button>}
+                    </Col>
+                  ))}
+              </Row>
+          </Container>
+
+
       </Card.Body>
     )
 
