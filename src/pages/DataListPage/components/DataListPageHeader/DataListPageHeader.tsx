@@ -13,7 +13,7 @@ interface IDataListPageHeader {
 const DataListPageHeader: FC<IDataListPageHeader> = memo(({itemsInCart}) => {
   return (<Header fluid={fluid}>
     <Nav fill className="justify-content-end w-100">
-        <Form className={'d-flex'}>
+        <Form className={'d-flex mb-2 mb-sm-0 me-sm-2'}>
           <Form.Control
             className={'rounded-0 border-end-0 rounded-start-3 w-100'}
             type="text"
