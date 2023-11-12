@@ -1,26 +1,21 @@
 import {Col, Container, Row} from "react-bootstrap";
-import Header from "layout/Header";
-import CustomCard from "ui/CustomCard";
-import {ButtonType} from "config/types.ts";
-import Icon from "ui/Icon";
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
+import DataItemPageHeader from "./components/DataItemPageHeader";
+import DataItemPageContent from "pages/DataItemPage/components/DataItemPageContent";
 
-const CardButtonsArr : ButtonType[] = [
-  {
-    buttonName: 'add',
-    buttonContent: <><Icon size={18} iconName={'FolderPlus'} /> Добавить</>
-  }
-]
+
 
 const DataItemPage = memo(() => {
+  const [data, setData] = useState();
+
   return (
     <Container>
       <Row>
-        <Header />
+        <DataItemPageHeader />
       </Row>
       <Row xs={1}>
         <Col xs={'auto'}></Col>
-        <Col xs={12} sm={10}><CustomCard isVertical={false} buttonsArr={CardButtonsArr} /></Col>
+        <Col xs={12} sm={10}><DataItemPageContent /></Col>
         <Col xs={'auto'}></Col>
       </Row>
     </Container>

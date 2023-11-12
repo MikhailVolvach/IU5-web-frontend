@@ -19,5 +19,10 @@ export default defineConfig({
       "store": fileURLToPath(new URL("./src/store", import.meta.url)),
       "src": fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server: {
+    watch: {
+      usePolling: true,
+    }
   }
 })

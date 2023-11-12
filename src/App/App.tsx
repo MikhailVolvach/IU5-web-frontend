@@ -1,4 +1,5 @@
 import {HashRouter, Navigate, Route, Routes} from "react-router-dom";
+
 import DataListPage from "pages/DataListPage";
 import DataItemPage from "pages/DataItemPage";
 

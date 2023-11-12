@@ -19,7 +19,7 @@ const CustomCardBody: FC<ICustomCardBody> = memo(({ title = "", text = "", loadi
           <Container>
               <Row xs={1} sm={2}>
                   {buttonsArr.map((button) => (
-                    <Col xs={12} sm={6} className={'p-1'}>
+                    <Col key={button.buttonName + button.buttonContent} xs={12} sm={6} className={'p-1'}>
                         {loading || !button.buttonContent ? <PlaceholderButton className={'w-100'} key={button.buttonName} variant="primary" xs={5} /> : <Button className={'w-100'} key={button.buttonName} variant="primary" >{button.buttonContent}</Button>}
                     </Col>
                   ))}

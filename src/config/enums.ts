@@ -16,3 +16,15 @@ export enum EBootstrapFluid {
     XL = 'xl',
     XXL = 'xxl'
 }
+
+export enum EDataFileTypeField {
+    TEXT_FILE = 1,
+    CODE = 2,
+    IMAGE = 3
+}
+
+export enum EIsEncryptedField {
+    ENCRYPTED = 1,
+    ORIGINAL = 2
+}
+
