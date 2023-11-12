@@ -6,11 +6,10 @@ export interface ICustomCardBody {
     title?: string;
     text?: string;
     loading?: boolean;
-    // buttonsArr: ButtonType[];
     buttonsArr: string[];
 }
 
-const CustomCardBody: FC<ICustomCardBody> = memo(({ title = "", text = "", loading=false, buttonsArr}) => {
+const CustomCardBody: FC<ICustomCardBody> = memo(({ title = "", loading=false, buttonsArr}) => {
     return (
       <Card.Body>
           {loading || !title ? <Placeholder as={Card.Title} animation="glow"><Placeholder xs={6} /></Placeholder> : <Card.Title>{title}</Card.Title>}
