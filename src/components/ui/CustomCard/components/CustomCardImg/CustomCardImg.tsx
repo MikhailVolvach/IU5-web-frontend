@@ -8,7 +8,7 @@ export interface ICustomCardImg {
 
 const CustomCardImg: FC<ICustomCardImg> = memo(({ img = "" }) => {
     return (
-      <Card.Img variant="top" src={img || defaultImage} />)
+      <Card.Img className={'rounded-2'} variant="top" src={img || defaultImage} />)
 })
 
 export default CustomCardImg;

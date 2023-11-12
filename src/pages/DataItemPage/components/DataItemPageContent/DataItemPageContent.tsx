@@ -1,11 +1,16 @@
 import { CardButtonsArr } from "config/config";
-import { memo } from "react";
+import {FC, memo} from "react";
 import CustomCard from "ui/CustomCard";
-import {ButtonType} from "config/types.ts";
+import {DataItemResType} from "config/types.ts";
+import {getBadgeTextFromState} from "utils/getBadgeTextFromState.ts";
 
-const DataItemPageContent = memo(() => {
+export interface IDataItemPageContent {
+    data?: DataItemResType;
+}
+
+const DataItemPageContent : FC<IDataItemPageContent> = memo(({data }) => {
     return (
-        <CustomCard isVertical={false} buttonsArr={CardButtonsArr.filter((button: ButtonType) => button.buttonName === 'add')} />
+        <CustomCard img={data?.img} title={data?.title} badgeText={data?.is_encrypted ? getBadgeTextFromState(data.is_encrypted) : ''} badgeState={data?.is_encrypted} isVertical={false} buttonsArr={CardButtonsArr.filter((button: string) => button === 'ADD')} />
     )
 });
 

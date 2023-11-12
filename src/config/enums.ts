@@ -1,3 +1,5 @@
+import {KeyValue} from "config/types.ts";
+
 export enum EBootstrapColor {
     PRIMARY = 'primary',
     SECONDARY = 'secondary',
@@ -26,5 +28,11 @@ export enum EDataFileTypeField {
 export enum EIsEncryptedField {
     ENCRYPTED = 1,
     ORIGINAL = 2
+}
+
+export const CardButtonInfo: KeyValue = {
+    'ADD': 'Добавить',
+    'MORE': 'Подробнее',
+    'REMOVE': 'Удалить'
 }
 

@@ -5,11 +5,13 @@ import DataListPageContent from "./components/DataListPageContent";
 import DataListPageHeader from "./components/DataListPageHeader";
 import {memo, useEffect, useState} from "react";
 import { DataListResType } from "config/types";
+import {CardButtonInfo} from "config/enums.ts";
 
 const DataListPage = memo(() => {
   const [data, setData] = useState<DataListResType | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  console.log(CardButtonInfo['ADD']);
   useEffect(() => {
     const getData = async () => {
       const resp = await fetch('https://localhost/data/');
@@ -17,8 +19,7 @@ const DataListPage = memo(() => {
       if (resp.ok) {
         const newData = await resp.json();
         setData(newData);
-        setIsLoading(false);
-        console.log(newData);
+        // setIsLoading(false);
       }
     }
     getData();
@@ -26,10 +27,6 @@ const DataListPage = memo(() => {
 
 
   return (
-    // isLoading
-    //   ? <Container fluid={fluid}>
-    //     <Row className={'vh-100 d-flex justify-content-center align-items-center'}><CustomSpinner /></Row></Container>
-    //   :
     <Container fluid={fluid}>
       <Row>
         <DataListPageHeader itemsInCart={data?.data.length}/>

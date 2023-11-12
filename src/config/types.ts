@@ -21,3 +21,6 @@ export type DataItemResType = {
   is_deleted: boolean;
 }
 
+export type KeyValue = {
+  [key: string]: string
+}
