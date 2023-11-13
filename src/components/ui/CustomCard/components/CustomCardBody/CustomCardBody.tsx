@@ -1,21 +1,22 @@
 import {FC, memo} from "react";
 import {Button, Card, Col, Container, Placeholder, PlaceholderButton, Row} from "react-bootstrap";
 import {useCreateCardButtonContent} from "utils/useCreateCardButtonContent.tsx";
+import {EDataFileTypeField} from "config/enums.ts";
+import CustomCardText from "ui/CustomCard/components/CustomCardText";
 
 export interface ICustomCardBody {
     title?: string;
     text?: string;
     loading?: boolean;
     buttonsArr: string[];
+    textType?: EDataFileTypeField;
 }
 
-const CustomCardBody: FC<ICustomCardBody> = memo(({ title = "", loading=false, buttonsArr}) => {
+const CustomCardBody: FC<ICustomCardBody> = memo(({ title = '', text = '', loading=false, buttonsArr, textType=EDataFileTypeField.TEXT_FILE}) => {
     return (
       <Card.Body>
-          {loading || !title ? <Placeholder as={Card.Title} animation="glow"><Placeholder xs={6} /></Placeholder> : <Card.Title>{title}</Card.Title>}
-          {/*{loading || !text ? <Placeholder as={Card.Text} animation="glow">*/}
-          {/*      <Placeholder xs={10}/>{' '}*/}
-          {/*      <Placeholder xs={10} /></Placeholder> : <Card.Text>{text}</Card.Text>}*/}
+          {loading || !title ? <Placeholder as={Card.Title} animation='glow'><Placeholder xs={6} /></Placeholder> : <Card.Title>{title}</Card.Title>}
+          <CustomCardText text={text} textType={textType} />
           <Container>
               <Row xs={1} sm={2}>
                   {buttonsArr.map((button) => {
@@ -27,34 +28,8 @@ const CustomCardBody: FC<ICustomCardBody> = memo(({ title = "", loading=false, b
                   })}
               </Row>
           </Container>
-
-
       </Card.Body>
     )
-
-
-
-
-    // {buttonText ? <Button variant="primary">{buttonText}</Button> :
-    //   <Placeholder.Button variant="primary" xs={6} />
-    // }
-    //         }
-    //
-    //         {title ? <Card.Title>{title}</Card.Title>
-    //         : <Placeholder as={Card.Title} animation="glow">
-    //             <Placeholder xs={6} />
-    //     </Placeholder>}
-    //         {text ? <Card.Text>{text}</Card.Text> :
-    //         <Placeholder as={Card.Text} animation="glow">
-    //             <Placeholder xs={7} /> <Placeholder xs={4} /> <Placeholder xs={4} />{' '}
-    //             <Placeholder xs={6} /> <Placeholder xs={8} />
-    //         </Placeholder>
-    //         }
-    //         {buttonText ? <Button variant="primary">{buttonText}</Button> :
-    //         <Placeholder.Button variant="primary" xs={6} />
-    //         }
-    //     </Card.Body>
-    //     );
 })
 
 export default CustomCardBody;

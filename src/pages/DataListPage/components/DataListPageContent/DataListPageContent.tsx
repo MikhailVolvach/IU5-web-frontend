@@ -15,7 +15,7 @@ const DataListPageContent:FC<IDataListPageContent> = memo(({ data }) => {
   return (
     <>
       <Container >
-        <Row xs={1} sm={1} md={2} lg={3} xl={4}>
+        <Row xs={1} sm={1} md={2} lg={3} xl={4} className={'d-flex align-items-stretch'}>
           {!data &&
             Array.from({length: 8}, (_, index) => <Col key={index}>
               <CustomCard />

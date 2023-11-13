@@ -6,11 +6,12 @@ import {getBadgeTextFromState} from "utils/getBadgeTextFromState.ts";
 
 export interface IDataItemPageContent {
     data?: DataItemResType;
+    text?: string;
 }
 
-const DataItemPageContent : FC<IDataItemPageContent> = memo(({data }) => {
+const DataItemPageContent : FC<IDataItemPageContent> = memo(({data , text}) => {
     return (
-        <CustomCard img={data?.img} title={data?.title} badgeText={data?.is_encrypted ? getBadgeTextFromState(data.is_encrypted) : ''} badgeState={data?.is_encrypted} isVertical={false} buttonsArr={CardButtonsArr.filter((button: string) => button === 'ADD')} />
+        <CustomCard textType={data?.data_type} text={text} img={data?.img} title={data?.title} badgeText={data?.is_encrypted ? getBadgeTextFromState(data.is_encrypted) : ''} badgeState={data?.is_encrypted} isVertical={false} buttonsArr={CardButtonsArr.filter((button: string) => button === 'ADD')} />
     )
 });
 
