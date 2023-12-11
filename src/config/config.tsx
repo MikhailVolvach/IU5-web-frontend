@@ -13,4 +13,7 @@ export const fluid = EBootstrapFluid.SM;
 //     }
 // ]
 
-export const CardButtonsArr = ['ADD', 'MORE']
+// export const CardButtonsArr = ['ADD']
+export const CardButtonsArr = [];
+
+export const API_URL = 'http://localhost:8000';

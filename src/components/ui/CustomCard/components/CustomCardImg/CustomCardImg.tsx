@@ -1,6 +1,6 @@
 import {FC, memo} from "react";
 import { Card } from "react-bootstrap";
-import defaultImage from 'svg/default-image.svg';
+import defaultImage from 'assets/default-image.svg';
 
 export interface ICustomCardImg {
     img?: string;

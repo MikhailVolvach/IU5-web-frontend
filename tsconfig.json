@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
@@ -28,10 +28,9 @@
       "pages/*": ["pages/*"],
       "styles/*": ["styles/*"],
       "utils/*": ["utils/*"],
-      "img/*": ["assets/img/*"],
-      "svg/*": ["assets/svg/*"],
+      "assets/*": ["assets/*"],
       "store/*": ["store/*"],
-      "src/*": ["/*"]
+      "src/*": ["/*"],
     },
   },
   "include": ["src"],
