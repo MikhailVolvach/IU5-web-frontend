@@ -11,7 +11,7 @@ interface IDataListPageHeader {
   searchValue?: string;
   onSubmit?: (event: FormEvent<HTMLFormElement>) => void;
   onSearchChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  requestId?: number;
+  requestId?: number | null;
 }
 
 const DataListPageHeader: FC<IDataListPageHeader> = memo(({requestId= 0, searchValue = '', onSearchChange = () => {return}, onSubmit = () => {return}}) => {

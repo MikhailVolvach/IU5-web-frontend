@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.scss';
 import {BrowserRouter, HashRouter} from "react-router-dom";
+import { store } from './store'
+import { Provider } from "react-redux";
 
 const Router: FC<PropsWithChildren> = ({children}) => {
   return process.env.NODE_ENV === 'development' ? <HashRouter>{children}</HashRouter> : <BrowserRouter>{children}</BrowserRouter>;
@@ -10,8 +12,10 @@ const Router: FC<PropsWithChildren> = ({children}) => {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Router>
-      <App />
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <App />
+      </Router>
+    </Provider>
   </React.StrictMode>,
 )

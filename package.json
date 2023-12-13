@@ -9,15 +9,19 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --host",
     "predeploy": "yarn build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "generate-api": "node src/utils/generate-api.mjs"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.0.1",
+    "axios": "^1.6.2",
     "bootstrap": "^5.3.2",
     "bootstrap-icons": "^1.11.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
     "react-bootstrap-icons": "^1.10.3",
     "react-dom": "^18.2.0",
+    "react-redux": "^9.0.3",
     "react-router-dom": "^6.18.0",
     "react-syntax-highlighter": "^15.5.0"
   },
@@ -33,6 +37,7 @@
     "eslint-plugin-react-refresh": "^0.4.3",
     "gh-pages": "^6.0.0",
     "sass": "^1.69.5",
+    "swagger-typescript-api": "^13.0.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vite-plugin-checker": "^0.6.2"
