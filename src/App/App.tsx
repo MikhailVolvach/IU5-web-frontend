@@ -9,20 +9,19 @@ function App() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
-  // const [query, setQuery] = useState<string>(queryParams.get('data_search') || '');
-
   const handleSetQuery = useCallback((value: string) => {
-    queryParams.set('data_search', value);
-    navigate(`${location.pathname}?${queryParams.toString()}`)
+    queryParams.set('search', value);
+    console.log(location.pathname, queryParams.toString());
+    navigate(`${location.pathname}?${queryParams.toString()}`);
   }, []);
 
   return (
       <Routes>
-        <Route path='/data' element={ <DataListPage searchQuery={queryParams.get('data_search') || ''} searchQueryChange={handleSetQuery} /> } />
+        <Route path='/' element={ <DataListPage searchQuery={queryParams.get('search') || ''} searchQueryChange={handleSetQuery} /> } />
         <Route path='/data' >
           <Route path=':id' element={ <DataItemPage /> }/>
         </Route>
-        <Route path='*' element={ <Navigate to='/data' replace /> } />
+        <Route path='*' element={ <Navigate to='/' replace /> } />
       </Routes>
   )
 }

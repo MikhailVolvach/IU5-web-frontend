@@ -7,7 +7,7 @@ import { store } from './store'
 import { Provider } from "react-redux";
 
 const Router: FC<PropsWithChildren> = ({children}) => {
-  return process.env.NODE_ENV === 'development' ? <HashRouter>{children}</HashRouter> : <BrowserRouter>{children}</BrowserRouter>;
+  return process.env.NODE_ENV === 'development' ? <HashRouter basename='/'>{children}</HashRouter> : <BrowserRouter basename='/'>{children}</BrowserRouter>;
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

@@ -1,10 +1,9 @@
 import Header from "layout/Header";
-import {API_URL, fluid} from 'config/config';
+import {fluid} from 'config/config';
 import {Button, Form, Nav} from "react-bootstrap";
 import {EBootstrapColor} from "config/enums.ts";
 import Icon from "ui/Icon";
-import CustomBadge from "ui/CustomBadge";
-import {ChangeEvent, FC, FormEvent, memo, useCallback, useEffect, useState} from "react";
+import {ChangeEvent, FC, FormEvent, memo, useCallback} from "react";
 
 interface IDataListPageHeader {
   itemsInCart?: number;
@@ -14,8 +13,8 @@ interface IDataListPageHeader {
   requestId?: number | null;
 }
 
-const DataListPageHeader: FC<IDataListPageHeader> = memo(({requestId= 0, searchValue = '', onSearchChange = () => {return}, onSubmit = () => {return}}) => {
-  const [itemsInCart, setItemsInCart] = useState<number>(0);
+const DataListPageHeader: FC<IDataListPageHeader> = memo(({requestId = -1, searchValue = '', onSearchChange = () => {return}, onSubmit = () => {return}}) => {
+  const isDraftExists : Boolean = (requestId === -1 ? false : true);
 
   const handleSearchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     onSearchChange(event);
@@ -24,21 +23,6 @@ const DataListPageHeader: FC<IDataListPageHeader> = memo(({requestId= 0, searchV
   const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
     onSubmit(event);
   }, []);
-
-  useEffect(() => {
-    const getReq = async () => {
-      const resp = await fetch(`${API_URL}/encryption-requests/${requestId}`);
-
-      if (resp.ok) {
-        const respData = await resp.json();
-        setItemsInCart(respData.data.length);
-      } else {
-        setItemsInCart(0);
-      }
-    }
-
-    getReq();
-  }, [requestId]);
 
   return (<Header fluid={fluid}>
     <Nav fill className="justify-content-end w-100">
@@ -53,7 +37,7 @@ const DataListPageHeader: FC<IDataListPageHeader> = memo(({requestId= 0, searchV
           <Button type="submit" variant={`outline-${EBootstrapColor.SUCCESS}`} className={'rounded-0 rounded-end-3'}>Поиск</Button>
         </Form>
         <Button href="#cart" className={'d-flex rounded-3 justify-content-center align-content-center'} variant={`outline-${EBootstrapColor.PRIMARY}`}>
-          <Icon iconName={itemsInCart > 0 ? 'FolderFill' : 'Folder'} size={20} className="d-flex align-content-center me-2"/>Заявка{itemsInCart > 0 && <CustomBadge bg={EBootstrapColor.INFO} badgeText={`${itemsInCart}`} cn={'d-flex justify-content-center align-items-center top-0 ms-2'} /> }
+          <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={20} className="d-flex align-content-center me-2"/>Заявка
         </Button>
     </Nav>
   </Header> );

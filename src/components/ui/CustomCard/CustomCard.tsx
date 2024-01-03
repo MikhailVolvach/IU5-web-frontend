@@ -34,7 +34,7 @@ const CustomCard: FC<ICustomCard> = memo(({title = "", img = "", text = "", badg
         {/*<Button onClick={handleDeleteButtonClick} variant={`outline-${EBootstrapColor.DANGER}`} className={'position-absolute top-0 start-0 ms-2 mt-2 rounded-circle p-0 d-flex justify-content-center align-items-center'}><Icon iconName={"X"} size={30} /></Button>*/}
         <Container className={'h-100'}>
             <Row xs={1} md={rowSize} className={rowCn}>
-                <Col xs={12} md={imgColSize} className={'p-2'}><CustomCardImg  img={img} /></Col>
+                <Col xs={12} md={imgColSize} className={'p-2'}><CustomCardImg img={img} /></Col>
                 <Col xs={12} md={imgColSize}><CustomCardBody url={url} loading={loading} title={title} text={text} textType={textType} buttonsArr={buttonsArr} onClick={handleClick}/></Col>
             </Row>
         </Container>

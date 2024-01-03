@@ -12,7 +12,7 @@ import {API_URL} from "config/config.tsx";
 
 const DataItemPage = memo(() => {
   const [data, setData] = useState<DataItemResType>();
-  const [fileData, setFileData] = useState<string>();
+  const [fileData, setFileData] = useState<string>('');
   const { id } = useParams();
 
   const { pathname } = useLocation();
@@ -36,12 +36,12 @@ const DataItemPage = memo(() => {
         const newData = await resp.json();
         setData(newData);
 
-        if (newData.data_type === EDataFileTypeField.TEXT_FILE || newData.data_type === EDataFileTypeField.CODE) {
+        if ((newData.data_type === EDataFileTypeField.TEXT_FILE || newData.data_type === EDataFileTypeField.CODE) && newData.file) {
           await getFileData(newData.file);
         }
       } else {
         const newData = getMockDataItem(Number(id) | 0);
-        if (newData.data_type === EDataFileTypeField.TEXT_FILE || newData.data_type === EDataFileTypeField.CODE) {
+        if ((newData.data_type === EDataFileTypeField.TEXT_FILE || newData.data_type === EDataFileTypeField.CODE) && newData.file) {
           await getFileData(newData.file);
         }
         setData(newData);
@@ -50,6 +50,7 @@ const DataItemPage = memo(() => {
 
     getData();
   }, []);
+
 
   return (
     <Container>

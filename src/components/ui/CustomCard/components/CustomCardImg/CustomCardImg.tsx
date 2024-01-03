@@ -5,7 +5,7 @@ import defaultImage from 'assets/default-image.svg';
 export interface ICustomCardImg {
     img?: string;
 }
-
+// style={{height: '300px', objectFit: 'cover'}}
 const CustomCardImg: FC<ICustomCardImg> = memo(({ img = "" }) => {
     return (
       <Card.Img className={'rounded-2'} variant="top" src={img || defaultImage} />)

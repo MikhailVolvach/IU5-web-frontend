@@ -13,7 +13,7 @@ const Header: FC<IHeader> = memo(({bg = EBootstrapColor.LIGHT, fluid = EBootstra
       <header className='w-100 px-0 mb-3'>
             <Navbar expand={fluid} bg={bg} data-bs-theme="light" className={'rounded-3 p-3 shadow-sm'}>
                 <Container fluid={fluid}>
-                  <Link to='/?data_search=' className={'my-2 link-underline link-offset-2 link-offset-3-hover link-underline-opacity-0 link-underline-opacity-100-hover'}>
+                  <Link to='/' className={'my-2 link-underline link-offset-2 link-offset-3-hover link-underline-opacity-0 link-underline-opacity-100-hover'}>
                     <Navbar.Brand  color={'#fff'}>Главная</Navbar.Brand>
                   </Link>
                   {children && <Navbar.Toggle aria-controls="basic-navbar-nav" />}
