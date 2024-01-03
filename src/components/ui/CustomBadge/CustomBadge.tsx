@@ -19,7 +19,7 @@ const CustomBadge : FC<ICustomBadge> = memo(({
     badgeText = ''
 }) => {
     return (
-        loading || !badgeText ? <Placeholder as={Badge} />
+        loading ? <Placeholder as={Badge} />
               : <Badge className={cn} bg={bg} text={textColor} pill={isPill}>{badgeText}</Badge>
         );
 })
