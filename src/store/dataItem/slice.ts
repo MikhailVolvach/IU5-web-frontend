@@ -6,26 +6,34 @@ const dataItemSlice = createSlice({
     name: 'dataItem',
     initialState: {
         isLoaded: false,
-        data: {} as DataItem
+        data: {} as DataItem,
+        // fileData: ''
     },
     reducers: {
         setIsLoaded(state, action) {
-            return { ...state, isLoaded: true };
+            return { ...state, isLoaded: action.payload };
         },
         setData(state, action) {
             return { ...state, data: action.payload };
-        }
+        },
+        // setFileData(state, action) {
+        //     return { ...state, fileData: action.payload };
+        // }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getItemPageData.fulfilled, (state, action) => {
+            .addCase(getItemPageData.pending, (state) => {
                 state.isLoaded = false;
+            })
+            .addCase(getItemPageData.fulfilled, (state, action) => {
                 state.data = action.payload;
                 state.isLoaded = true;
             })
             .addCase(getItemPageData.rejected, (state, action) => {
                 console.log(state, action.payload);
+                state.isLoaded = true;
             })
+
     }
 })
 
