@@ -1,11 +1,13 @@
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
-import {API_URL, fluid} from 'config/config';
+import { fluid } from 'config/config';
 import DataListPageContent from "./components/DataListPageContent";
 import DataListPageHeader from "./components/DataListPageHeader";
 import {ChangeEvent, FC, FormEvent, memo, useCallback, useEffect, useState} from "react";
-import {getMockDataList} from "utils/getMockData.ts";
-import {DataListResType} from "config/types.ts";
+// import {getMockDataList} from "utils/getMockData.ts";
+
+import { getListPageData, useDataList } from 'store/dataList';
+import { useAppDispatch } from 'store/hooks';
 
 export interface IDataListPage {
   searchQuery?: string;
@@ -13,7 +15,8 @@ export interface IDataListPage {
 }
 
 const DataListPage : FC<IDataListPage> = memo(({searchQuery = '', searchQueryChange = () => null}) => {
-  const [data, setData] = useState<DataListResType | null>(null);
+  const dispatch = useAppDispatch();
+
   const [searchValue, setSearchValue] = useState<string>("");
 
   const handleSearchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -26,28 +29,23 @@ const DataListPage : FC<IDataListPage> = memo(({searchQuery = '', searchQueryCha
     searchQueryChange(e.target[0]?.value);
   }, []);
 
+  const fetchData = async () => {
+    dispatch(getListPageData(searchQuery));
+  }
+
   useEffect(() => {
-    const getData = async () => {
-      const resp = await fetch(`${API_URL}/data?search=${searchQuery}`);
+    fetchData();
+  }, [searchQuery, dispatch]);
 
-      if (resp.ok) {
-        const newData = await resp.json();
-        setData(newData);
-      } else {
-        setData(getMockDataList());
-      }
-    }
-    getData();
-    }, [searchQuery]);
-
+  const {data, orderId} = useDataList();
 
   return (
     <Container fluid={fluid}>
       <Row>
-        <DataListPageHeader requestId={data?.request_id} searchValue={searchValue} onSubmit={handleSearchSubmit} itemsInCart={data?.data.length} onSearchChange={handleSearchChange}/>
+        <DataListPageHeader requestId={orderId} searchValue={searchValue} onSubmit={handleSearchSubmit} onSearchChange={handleSearchChange}/>
       </Row>
       <Row>
-        <DataListPageContent data={data?.data} />
+        <DataListPageContent data={data} />
       </Row>
     </Container>
   );

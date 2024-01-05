@@ -1,70 +1,46 @@
 import {Col, Container, Row} from "react-bootstrap";
-import {memo, useCallback, useEffect, useState} from "react";
+import {memo, useEffect} from "react";
 import DataItemPageHeader from "./components/DataItemPageHeader";
 import DataItemPageContent from "pages/DataItemPage/components/DataItemPageContent";
 import {useLocation, useParams} from "react-router-dom";
-import {EDataFileTypeField} from "config/enums.ts";
 import CustomBreadcrumbs from "ui/CustomBreadcrumbs";
-import {getMockDataItem} from "utils/getMockData.ts";
-import {DataItemResType} from "config/types.ts";
-import {API_URL} from "config/config.tsx";
+// import {getMockDataItem} from "utils/getMockData.ts";
+import {useDataItem, getItemPageData} from 'store/dataItem';
+import { useAppDispatch } from "store/hooks";
+import CustomLoader from 'ui/CustomLoader';
 
 
 const DataItemPage = memo(() => {
-  const [data, setData] = useState<DataItemResType>();
-  const [fileData, setFileData] = useState<string>('');
+  const dispatch = useAppDispatch();
   const { id } = useParams();
-
   const { pathname } = useLocation();
 
+  const fetchData = async () => {
+    if (id) dispatch(getItemPageData(id));
+  }
 
-  const getFileData = useCallback(async (fileUrl: string) => {
-    const resp = await fetch(fileUrl);
+  const { isLoaded, data } = useDataItem();
 
-    if (resp.ok) {
-      const fileData = await resp.text();
-      setFileData(fileData);
-    }
-  }, []);
+  console.log(isLoaded);
 
   useEffect(() => {
-    const getData = async () => {
-
-      const resp = await fetch(`${API_URL}/data/${id}`);
-
-      if (resp.ok) {
-        const newData = await resp.json();
-        setData(newData);
-
-        if ((newData.data_type === EDataFileTypeField.TEXT_FILE || newData.data_type === EDataFileTypeField.CODE) && newData.file) {
-          await getFileData(newData.file);
-        }
-      } else {
-        const newData = getMockDataItem(Number(id) | 0);
-        if ((newData.data_type === EDataFileTypeField.TEXT_FILE || newData.data_type === EDataFileTypeField.CODE) && newData.file) {
-          await getFileData(newData.file);
-        }
-        setData(newData);
-      }
-    }
-
-    getData();
-  }, []);
-
+    fetchData();
+  }, [dispatch, isLoaded]);
 
   return (
     <Container>
       <Row>
         <DataItemPageHeader />
       </Row>
-      <Row className={'mb-3'}>
+      { !isLoaded && <Row><Col xs={12}><CustomLoader /></Col></Row>}
+      { isLoaded && <Row className={'mb-3'}>
         <CustomBreadcrumbs breadcrumbsStr={pathname} />
-      </Row>
-      <Row xs={1}>
+      </Row> }
+      { isLoaded && <Row xs={1}>
         <Col xs={'auto'}></Col>
-        <Col xs={12} sm={10}><DataItemPageContent text={fileData} data={data}/></Col>
+        <Col xs={12} sm={10}><DataItemPageContent data={data}/></Col>
         <Col xs={'auto'}></Col>
-      </Row>
+      </Row>}
     </Container>
   );
 });

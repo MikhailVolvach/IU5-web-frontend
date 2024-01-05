@@ -228,7 +228,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags data
      * @name DataList
-     * @request GET:/data/
+     * @request GET:/data
      * @secure
      */
     dataList: (
@@ -239,7 +239,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<void, any>({
-        path: `/data/`,
+        path: `/data`,
         method: "GET",
         query: query,
         secure: true,
@@ -251,12 +251,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags data
      * @name DataCreate
-     * @request POST:/data/
+     * @request POST:/data
      * @secure
      */
     dataCreate: (data: DataItem, params: RequestParams = {}) =>
       this.request<DataItem, any>({
-        path: `/data/`,
+        path: `/data`,
         method: "POST",
         body: data,
         secure: true,
@@ -269,12 +269,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags data
      * @name DataRead
-     * @request GET:/data/{id}/
+     * @request GET:/data/{id}
      * @secure
      */
     dataRead: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/data/${id}/`,
+        path: `/data/${id}`,
         method: "GET",
         secure: true,
         ...params,
@@ -290,7 +290,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     dataUpdate: (id: string, data: DataItem, params: RequestParams = {}) =>
       this.request<DataItem, any>({
-        path: `/data/${id}/`,
+        path: `/data/${id}`,
         method: "PUT",
         body: data,
         secure: true,
@@ -303,12 +303,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags data
      * @name DataDelete
-     * @request DELETE:/data/{id}/
+     * @request DELETE:/data/{id}
      * @secure
      */
     dataDelete: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/data/${id}/`,
+        path: `/data/${id}`,
         method: "DELETE",
         secure: true,
         ...params,
@@ -319,12 +319,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags data
      * @name DataAddToRequestCreate
-     * @request POST:/data/{id}/add-to-request/
+     * @request POST:/data/{id}/add-to-request
      * @secure
      */
     dataAddToRequestCreate: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/data/${id}/add-to-request/`,
+        path: `/data/${id}/add-to-request`,
         method: "POST",
         secure: true,
         ...params,
@@ -335,12 +335,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags data
      * @name DataDeleteFromRequestDelete
-     * @request DELETE:/data/{id}/delete-from-request/
+     * @request DELETE:/data/{id}/delete-from-request
      * @secure
      */
     dataDeleteFromRequestDelete: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/data/${id}/delete-from-request/`,
+        path: `/data/${id}/delete-from-request`,
         method: "DELETE",
         secure: true,
         ...params,
@@ -352,12 +352,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags encryption-requests
      * @name EncryptionRequestsList
-     * @request GET:/encryption-requests/
+     * @request GET:/encryption-requests
      * @secure
      */
     encryptionRequestsList: (params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/encryption-requests/`,
+        path: `/encryption-requests`,
         method: "GET",
         secure: true,
         ...params,
@@ -368,12 +368,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags encryption-requests
      * @name EncryptionRequestsFormUpdate
-     * @request PUT:/encryption-requests/form/
+     * @request PUT:/encryption-requests/form
      * @secure
      */
     encryptionRequestsFormUpdate: (data: DataEncryptionRequest, params: RequestParams = {}) =>
       this.request<DataEncryptionRequest, any>({
-        path: `/encryption-requests/form/`,
+        path: `/encryption-requests/form`,
         method: "PUT",
         body: data,
         secure: true,
@@ -386,12 +386,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags encryption-requests
      * @name EncryptionRequestsRead
-     * @request GET:/encryption-requests/{id}/
+     * @request GET:/encryption-requests/{id}
      * @secure
      */
     encryptionRequestsRead: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/encryption-requests/${id}/`,
+        path: `/encryption-requests/${id}`,
         method: "GET",
         secure: true,
         ...params,
@@ -402,12 +402,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags encryption-requests
      * @name EncryptionRequestsUpdate
-     * @request PUT:/encryption-requests/{id}/
+     * @request PUT:/encryption-requests/{id}
      * @secure
      */
     encryptionRequestsUpdate: (id: string, data: DataEncryptionRequest, params: RequestParams = {}) =>
       this.request<DataEncryptionRequest, any>({
-        path: `/encryption-requests/${id}/`,
+        path: `/encryption-requests/${id}`,
         method: "PUT",
         body: data,
         secure: true,
@@ -420,12 +420,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags encryption-requests
      * @name EncryptionRequestsDelete
-     * @request DELETE:/encryption-requests/{id}/
+     * @request DELETE:/encryption-requests/{id}
      * @secure
      */
     encryptionRequestsDelete: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/encryption-requests/${id}/`,
+        path: `/encryption-requests/${id}`,
         method: "DELETE",
         secure: true,
         ...params,
@@ -436,12 +436,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags encryption-requests
      * @name EncryptionRequestsChangeStatusUpdate
-     * @request PUT:/encryption-requests/{id}/change-status/
+     * @request PUT:/encryption-requests/{id}/change-status
      * @secure
      */
     encryptionRequestsChangeStatusUpdate: (id: string, data: DataEncryptionRequest, params: RequestParams = {}) =>
       this.request<DataEncryptionRequest, any>({
-        path: `/encryption-requests/${id}/change-status/`,
+        path: `/encryption-requests/${id}/change-status`,
         method: "PUT",
         body: data,
         secure: true,

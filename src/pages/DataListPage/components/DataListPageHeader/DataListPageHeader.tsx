@@ -6,7 +6,6 @@ import Icon from "ui/Icon";
 import {ChangeEvent, FC, FormEvent, memo, useCallback} from "react";
 
 interface IDataListPageHeader {
-  itemsInCart?: number;
   searchValue?: string;
   onSubmit?: (event: FormEvent<HTMLFormElement>) => void;
   onSearchChange?: (event: ChangeEvent<HTMLInputElement>) => void;

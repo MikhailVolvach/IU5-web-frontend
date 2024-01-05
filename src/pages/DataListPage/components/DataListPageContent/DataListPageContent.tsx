@@ -1,13 +1,13 @@
 import Container from "react-bootstrap/Container";
 import {Col, Row} from "react-bootstrap";
 import CustomCard from "ui/CustomCard";
-import {DataItemResType} from "config/types.ts";
 import React, {FC, memo, useCallback} from "react";
 import {getBadgeTextFromState} from "utils/getBadgeTextFromState.ts";
 import { CardButtonsArr } from "config/config";
+import { DataItem } from "api";
 
 export interface IDataListPageContent {
-  data: DataItemResType[] | null | undefined;
+  data: DataItem[];
 }
 
 const DataListPageContent:FC<IDataListPageContent> = memo(({ data }) => {
@@ -31,7 +31,7 @@ const DataListPageContent:FC<IDataListPageContent> = memo(({ data }) => {
                     img={dataItem.img}
                     buttonsArr={CardButtonsArr}
                     badgeState={dataItem.is_encrypted}
-                    badgeText={getBadgeTextFromState(dataItem.is_encrypted)}
+                    badgeText={getBadgeTextFromState(dataItem?.is_encrypted)}
                     url={`/data/${dataItem.id}`}
                     onClick={handleCardClick}
                   />

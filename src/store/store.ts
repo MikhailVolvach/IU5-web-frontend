@@ -1,8 +1,12 @@
 import {configureStore, combineReducers} from "@reduxjs/toolkit";
-import {dataListReducer} from './dataList';
+import dataListReducer from './dataList';
+import dataItemReducer from './dataItem';
 
-export const store = configureStore({
+const store = configureStore({
   reducer: combineReducers({
     dataList: dataListReducer,
+    dataItem: dataItemReducer,
   })
 })
+
+export default store;

@@ -1,2 +1,2 @@
-export { store } from './store';
+export { default } from './store';
 export { useAppDispatch } from './hooks';
