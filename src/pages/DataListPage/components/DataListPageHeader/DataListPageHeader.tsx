@@ -15,8 +15,6 @@ interface IDataListPageHeader {
 
 const DataListPageHeader: FC<IDataListPageHeader> = memo(({requestId = -1, searchValue = '', onSearchChange = () => {return}, onSubmit = () => {return}}) => {
 
-  const isDraftExists = true;
-
   const handleSearchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     onSearchChange(event);
   }, []);

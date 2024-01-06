@@ -5,6 +5,7 @@ import DataListPageContent from "./components/DataListPageContent";
 import DataListPageHeader from "./components/DataListPageHeader";
 import {ChangeEvent, FC, FormEvent, memo, useCallback, useEffect, useState} from "react";
 // import {getMockDataList} from "utils/getMockData.ts";
+import HeaderWithSearch from 'layout/HeaderWithSearch';
 
 import { getListPageData, useDataList } from 'store/dataList';
 import { useAppDispatch } from 'store/hooks';
@@ -42,7 +43,13 @@ const DataListPage : FC<IDataListPage> = memo(({searchQuery = '', searchQueryCha
   return (
     <Container fluid={fluid}>
       <Row>
-        <DataListPageHeader requestId={orderId} searchValue={searchValue} onSubmit={handleSearchSubmit} onSearchChange={handleSearchChange}/>
+        <HeaderWithSearch 
+          searchValue={searchValue}
+          onSubmit={handleSearchSubmit}
+          onSearchChange={handleSearchChange}
+          requestId={orderId}
+        />
+        {/* <DataListPageHeader requestId={orderId} searchValue={searchValue} onSubmit={handleSearchSubmit} onSearchChange={handleSearchChange}/> */}
       </Row>
       <Row>
         <DataListPageContent data={data} />

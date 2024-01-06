@@ -18,8 +18,7 @@ export interface ICustomCardBody {
 
 const CustomCardBody: FC<ICustomCardBody> = memo(({ title = '', text = '', buttonsArr, textType = EDataFileTypeField.TEXT_FILE, url = '', onClick = () => { return }, withLoader }) => {
   const buttonColSm = Math.floor(12 / (buttonsArr.length + 1));
-  const isImage = textType === EDataFileTypeField.IMAGE;
-  
+  const isImage = textType === EDataFileTypeField.IMAGE;  
   
   return (
     <Card.Body className={'w-100'}>

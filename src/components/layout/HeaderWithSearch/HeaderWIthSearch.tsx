@@ -13,8 +13,8 @@ interface IHeaderWithSearch {
     requestId?: number | null;
 }
 
-const HeaderWithSearch: FC<IHeaderWithSearch> = memo(({requestId = -1, searchValue = '', onSearchChange = () => {return}, onSubmit = () => {return}}) => {
-    const isDraftExists : Boolean = (requestId === -1 ? false : true);
+const HeaderWithSearch: FC<IHeaderWithSearch> = memo(({requestId = null, searchValue = '', onSearchChange = () => {return}, onSubmit = () => {return}}) => {
+    const isDraftExists : Boolean = (requestId === null ? false : true);
   
     const handleSearchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
       onSearchChange(event);
@@ -38,7 +38,7 @@ const HeaderWithSearch: FC<IHeaderWithSearch> = memo(({requestId = -1, searchVal
           </Form>
           <Link 
             to="/request" 
-            // state={{ requestId: requestId }}
+            state={{ id: requestId }}
           >
             <Button href="#cart" className={'d-flex rounded-3 justify-content-center align-content-center'} variant={`outline-${EBootstrapColor.PRIMARY}`}>
               <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={20} className="d-flex align-content-center me-2"/>Заявка

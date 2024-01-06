@@ -16,7 +16,8 @@ export default defineConfig({
       "utils": fileURLToPath(new URL("./src/utils", import.meta.url)),
       "store": fileURLToPath(new URL("./src/store", import.meta.url)),
       "src": fileURLToPath(new URL('./src', import.meta.url)),
-      "assets": fileURLToPath(new URL('./src/assets', import.meta.url))
+      "assets": fileURLToPath(new URL('./src/assets', import.meta.url)),
+      "api": fileURLToPath(new URL('./src/api', import.meta.url))
     }
   },
   server: {
