@@ -6,8 +6,7 @@ const dataItemSlice = createSlice({
     name: 'dataItem',
     initialState: {
         isLoaded: false,
-        data: {} as DataItem,
-        // fileData: ''
+        data: {} as DataItem
     },
     reducers: {
         setIsLoaded(state, action) {
@@ -15,10 +14,7 @@ const dataItemSlice = createSlice({
         },
         setData(state, action) {
             return { ...state, data: action.payload };
-        },
-        // setFileData(state, action) {
-        //     return { ...state, fileData: action.payload };
-        // }
+        }
     },
     extraReducers: (builder) => {
         builder

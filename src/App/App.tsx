@@ -3,6 +3,7 @@ import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-do
 import DataListPage from "pages/DataListPage";
 import DataItemPage from "pages/DataItemPage";
 import {useCallback} from "react";
+import RequestItemPage from "pages/RequestItemPage";
 
 function App() {
   const navigate = useNavigate();
@@ -11,7 +12,6 @@ function App() {
 
   const handleSetQuery = useCallback((value: string) => {
     queryParams.set('search', value);
-    console.log(location.pathname, queryParams.toString());
     navigate(`${location.pathname}?${queryParams.toString()}`);
   }, []);
 
@@ -21,6 +21,7 @@ function App() {
         <Route path='/data' >
           <Route path=':id' element={ <DataItemPage /> }/>
         </Route>
+        <Route path='/request' element={ <RequestItemPage /> }/>
         <Route path='*' element={ <Navigate to='/' replace /> } />
       </Routes>
   )

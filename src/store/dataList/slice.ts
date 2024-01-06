@@ -22,19 +22,22 @@ const dataListSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getListPageData.fulfilled, (state, action) => {
+      .addCase(getListPageData.pending, (state) => {
         state.isLoaded = false;
+      })
+      .addCase(getListPageData.fulfilled, (state, action) => {
         state.data = action.payload?.data;
         state.orderId = action.payload?.request_id;
         state.isLoaded = true;
       })
       .addCase(getListPageData.rejected, (state, action) => {
         console.log(state, action.payload);
+        state.isLoaded = true;
       })
   },
 })
 
-export const { setData, setOrderId } = dataListSlice.actions;
+export const { setData, setOrderId, setIsLoaded } = dataListSlice.actions;
 
 const dataListReducer = dataListSlice.reducer;
 

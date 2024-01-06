@@ -39,7 +39,7 @@ const DataItemPage = memo(() => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (id == undefined) return;
+        if (id == undefined) {return};
         await dispatch(getItemPageData(id));  
         if (isLoaded) getFileData();  
       } catch (error) {

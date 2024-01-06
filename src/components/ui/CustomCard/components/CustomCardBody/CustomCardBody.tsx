@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { Button, Card, Col, Container, Placeholder, PlaceholderButton, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, PlaceholderButton, Row } from "react-bootstrap";
 import { useCreateCardButtonContent } from "utils/useCreateCardButtonContent.tsx";
 import { EDataFileTypeField } from "config/enums.ts";
 import CustomCardText from "ui/CustomCard/components/CustomCardText";
@@ -19,9 +19,10 @@ export interface ICustomCardBody {
 const CustomCardBody: FC<ICustomCardBody> = memo(({ title = '', text = '', buttonsArr, textType = EDataFileTypeField.TEXT_FILE, url = '', onClick = () => { return }, withLoader }) => {
   const buttonColSm = Math.floor(12 / (buttonsArr.length + 1));
   const isImage = textType === EDataFileTypeField.IMAGE;
+  
+  
   return (
     <Card.Body className={'w-100'}>
-      {/* {!title ? <Placeholder as={Card.Title} animation='glow' className={'w-100'}><Placeholder xs={12} sm={12} md={12} /></Placeholder> : <Card.Title>{title}</Card.Title>} */}
       <Card.Title>{title}</Card.Title>
       {!text && withLoader && !isImage && <CustomSpinner />}
       {text && <CustomCardText text={text} textType={textType} />}
@@ -38,7 +39,6 @@ const CustomCardBody: FC<ICustomCardBody> = memo(({ title = '', text = '', butto
             <Col xs={12} sm={buttonColSm} className={'p-1'}><Link to={url} className={'w-100'}>
               <Button className={'w-100'} variant='outline-primary'>Подробнее</Button>
             </Link></Col>}
-
         </Row>
       </Container>
     </Card.Body>
