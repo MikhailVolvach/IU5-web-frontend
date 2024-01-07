@@ -11,6 +11,10 @@ export const loginUser = createAsyncThunk<EncryptionUser, TLoginData>('/login', 
   return api.api.apiLoginCreate(loginData).then(({data}) => data).catch(e => Error(e));
 });
 
-export const logoutUser = createAsyncThunk<EncryptionUser>('/logout', async () : Promise<any> => {
+export const logoutUser = createAsyncThunk('/logout', async () : Promise<any> => {
   return api.api.apiLogoutCreate().then(({data}) => data).catch(e => Error(e));
+})
+
+export const authUser = createAsyncThunk<EncryptionUser>('userAuth', async () : Promise<any> => {
+  return api.api.apiUserAuthList().then(({data}) => data).catch(e => Error(e));
 })

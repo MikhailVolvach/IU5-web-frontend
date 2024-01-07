@@ -2,9 +2,7 @@ import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
 import { fluid } from 'config/config';
 import DataListPageContent from "./components/DataListPageContent";
-import DataListPageHeader from "./components/DataListPageHeader";
 import {ChangeEvent, FC, FormEvent, memo, useCallback, useEffect, useState} from "react";
-// import {getMockDataList} from "utils/getMockData.ts";
 import HeaderWithSearch from 'layout/HeaderWithSearch';
 
 import { getListPageData, useDataList } from 'store/dataList';
@@ -38,7 +36,7 @@ const DataListPage : FC<IDataListPage> = memo(({searchQuery = '', searchQueryCha
     fetchData();
   }, [searchQuery, dispatch]);
 
-  const {data, orderId} = useDataList();
+  const { data } = useDataList();
 
   return (
     <Container fluid={fluid}>
@@ -47,7 +45,6 @@ const DataListPage : FC<IDataListPage> = memo(({searchQuery = '', searchQueryCha
           searchValue={searchValue}
           onSubmit={handleSearchSubmit}
           onSearchChange={handleSearchChange}
-          requestId={orderId}
         />
         {/* <DataListPageHeader requestId={orderId} searchValue={searchValue} onSubmit={handleSearchSubmit} onSearchChange={handleSearchChange}/> */}
       </Row>

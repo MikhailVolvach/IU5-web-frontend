@@ -12,16 +12,16 @@ import { useLocation } from "react-router-dom";
 
 
 const RequestItemPage : FC = memo(() => {
-    // const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();
     const { state } = useLocation();
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         dispatch(getEncryptionRequestItem(state.orderId));
-    //     }
+    useEffect(() => {
+        const fetchData = async () => {
+            dispatch(getEncryptionRequestItem(state.id));
+        }
 
-    //     fetchData();
-    // }, []);
+        fetchData();
+    }, []);
 
     console.log(state.id);
 

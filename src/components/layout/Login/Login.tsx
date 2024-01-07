@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback, useState } from "react";
+import { ChangeEvent, FC, FormEvent, useCallback, useState } from "react";
 import { memo } from "react";
 import { FloatingLabel, Modal } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
@@ -28,7 +28,7 @@ const Login : FC<ILogin> = memo(({show = false, handleClose = () => null, handle
   }, []);
 
 
-  const handleSubmit = useCallback((e) => {
+  const handleSubmit = useCallback((e : FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const form = e.currentTarget;
@@ -37,7 +37,7 @@ const Login : FC<ILogin> = memo(({show = false, handleClose = () => null, handle
     if (form.checkValidity() === false) {
       e.stopPropagation();
     } else {
-      
+      // @ts-ignore
       handleFormSubmit({username: e.target[0]?.value, password: e.target[1]?.value})
 
       setUsername('');

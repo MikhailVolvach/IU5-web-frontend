@@ -480,22 +480,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         secure: true,
         ...params,
       }),
-
-    /**
-     * No description
-     *
-     * @tags api
-     * @name ApiUserAuthList
-     * @request GET:/api/user-auth
-     * @secure
-     */
-    apiUserAuthList: (params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/api/user-auth`,
-        method: "GET",
-        secure: true,
-        ...params,
-      }),
   };
   user = {
     /**
