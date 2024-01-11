@@ -15,8 +15,7 @@ interface IHeader extends PropsWithChildren {
 
 const Header: FC<IHeader> = memo(({bg = EBootstrapColor.LIGHT, fluid = EBootstrapFluid.LG, children}) => {
   const dispatch = useAppDispatch();
-  const { isLogin, userData, cookie } = useUserAuth();
-  const { orderId } = useDataList();
+  const { isLogin, userData, cookie, orderId } = useUserAuth();
 
   const [showLogin, setShowLogin] = useState<boolean>(false);
 

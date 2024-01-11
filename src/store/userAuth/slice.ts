@@ -10,7 +10,8 @@ const userSlice = createSlice({
     isLogin: sessionId ? true : false,
     // isLogin: false,
     userData: {} as EncryptionUser,
-    cookie: sessionId
+    cookie: sessionId,
+    orderId: '-1',
   },
   reducers: {
     setIsLogin(state, action) {
@@ -21,6 +22,9 @@ const userSlice = createSlice({
     },
     setCookie(state, _action) {
       return { ...state, cookie: sessionId };
+    },
+    setOrderId(state, action) {
+      return { ...state, cookie: action.payload };
     }
   },
   extraReducers: (builder) => {
@@ -29,9 +33,10 @@ const userSlice = createSlice({
         state.isLogin = false;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.userData = action.payload;
+        state.userData = action.payload.user;
         state.isLogin = true;
         state.cookie = sessionId;
+        state.orderId = action.payload.orderId;
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.userData = {} as EncryptionUser;
@@ -40,9 +45,10 @@ const userSlice = createSlice({
         document.cookie = '';
       })
       .addCase(authUser.fulfilled, (state, action) => {
-        state.userData = action.payload;
+        state.userData = action.payload.user;
         state.isLogin = true;
         state.cookie = sessionId;
+        state.orderId = action.payload.orderId;
       })
   },
 })

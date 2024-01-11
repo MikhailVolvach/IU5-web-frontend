@@ -1,29 +1,37 @@
-import React, { FC, memo, useEffect } from "react";
-import { Col, Container, Row, Table } from "react-bootstrap";
+import { FC, memo, useCallback, useEffect, useState } from "react";
+import { Container, Row, Nav } from "react-bootstrap";
 import Header from 'layout/Header';
 import { useAppDispatch } from 'store/hooks';
-import { getEncryptionRequestItem } from "store/encryptionRequestItem";
-import { useLocation } from "react-router-dom";
-
-
-// interface IRequestItemPage {
-//     requestId?: number;
-// }
+import { getEncryptionRequestItem, useEncryptionRequestItem } from "store/encryptionRequestItem";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import RequestItemPageData from './components/RequestItemPageData';
+import RequestItemPageInfo from './components/RequestItemPageInfo';
 
 
 const RequestItemPage : FC = memo(() => {
     const dispatch = useAppDispatch();
     const { state } = useLocation();
+    const navigate = useNavigate();
+
+    const { requestData } = useEncryptionRequestItem();
 
     useEffect(() => {
         const fetchData = async () => {
             dispatch(getEncryptionRequestItem(state.id));
         }
 
+        if (!state.id || state.id === -1) return;
+
         fetchData();
     }, []);
 
-    console.log(state.id);
+    const [selectedTab, setSelectedTab] = useState('info');
+
+    //@ts-ignore
+    const handleSelect = useCallback((e) => {
+        setSelectedTab(e);
+        navigate(e);
+    }, []);
 
     return (
         <Container>
@@ -31,23 +39,21 @@ const RequestItemPage : FC = memo(() => {
                 <Header />
             </Row>
             <Row>
-                <Col>
-                    <Table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Изображение</th>
-                                <th>Название</th>
-                                <th>Файл</th>
-                                <th>Зашифровано</th>
-                                <th>Тип данных</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr></tr>
-                        </tbody>
-                    </Table>
-                </Col>
+            <Nav variant="tabs" defaultActiveKey='info' activeKey={selectedTab} onSelect={handleSelect}>
+                <Nav.Item>
+                    <Nav.Link eventKey='info' onClick={(e) => {e.preventDefault()}}>Информация о заявке</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey='service-list'>Список услуг</Nav.Link>
+                </Nav.Item>
+            </Nav>
+            </Row>
+            <Row>
+                <Routes>
+                    <Route path={'info'} element={<RequestItemPageInfo />} />
+                    <Route path={'service-list'} element={<RequestItemPageData requestData={requestData} />} />
+                    <Route index element={<Navigate to='info' />}/>
+                </Routes>
             </Row>
         </Container>
     );

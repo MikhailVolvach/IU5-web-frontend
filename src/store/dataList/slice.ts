@@ -26,8 +26,9 @@ const dataListSlice = createSlice({
         state.isLoaded = false;
       })
       .addCase(getListPageData.fulfilled, (state, action) => {
-        state.data = action.payload?.data;
-        state.orderId = action.payload?.request_id;
+        state.data = action.payload.data;
+        state.orderId = action.payload.request_id;
+        console.log(action.payload.request_id);
         state.isLoaded = true;
       })
       .addCase(getListPageData.rejected, (state, action) => {

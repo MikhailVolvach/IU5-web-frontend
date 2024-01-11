@@ -1,4 +1,4 @@
-import {Navigate, Outlet, Route, Routes, useLocation, useNavigate} from "react-router-dom";
+import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 
 import DataListPage from "pages/DataListPage";
 import DataItemPage from "pages/DataItemPage";
@@ -30,8 +30,8 @@ function App() {
           path='/data/:id'
           element={<DataItemPage />}
         />
-        <Route path='/request' element={ <RequestItemPage /> }/>
-        <Route path='*' element={ <Navigate to='/' replace /> } />
+        <Route path='/request/*' element={ <RequestItemPage /> }/>
+        {/* <Route path='*' element={ <Navigate to='/' replace /> } /> */}
       </Routes>
   )
 }

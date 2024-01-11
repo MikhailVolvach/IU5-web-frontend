@@ -7,7 +7,13 @@ export type TLoginData = {
   password: string;
 }
 
-export const loginUser = createAsyncThunk<EncryptionUser, TLoginData>('/login', async (loginData) : Promise<any> => {
+type TUserReqData = {
+  user: EncryptionUser;
+  orderId: string;
+}
+
+
+export const loginUser = createAsyncThunk<TUserReqData, TLoginData>('/login', async (loginData) : Promise<any> => {
   return api.api.apiLoginCreate(loginData).then(({data}) => data).catch(e => Error(e));
 });
 
@@ -15,6 +21,6 @@ export const logoutUser = createAsyncThunk('/logout', async () : Promise<any> =>
   return api.api.apiLogoutCreate().then(({data}) => data).catch(e => Error(e));
 })
 
-export const authUser = createAsyncThunk<EncryptionUser>('userAuth', async () : Promise<any> => {
+export const authUser = createAsyncThunk<TUserReqData>('userAuth', async () : Promise<any> => {
   return api.api.apiUserAuthList().then(({data}) => data).catch(e => Error(e));
 })
