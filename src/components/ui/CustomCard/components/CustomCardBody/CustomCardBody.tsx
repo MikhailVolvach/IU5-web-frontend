@@ -1,24 +1,24 @@
 import { FC, memo } from "react";
 import { Button, Card, Col, Container, PlaceholderButton, Row } from "react-bootstrap";
 import { useCreateCardButtonContent } from "utils/useCreateCardButtonContent.tsx";
-import { EDataFileTypeField } from "config/enums.ts";
 import CustomCardText from "ui/CustomCard/components/CustomCardText";
 import { Link } from "react-router-dom";
 import CustomSpinner from "ui/CustomSpinner";
+import { EDataType } from "store/enums";
 
 export interface ICustomCardBody {
   title?: string;
   text?: string;
   buttonsArr: string[];
-  textType?: EDataFileTypeField;
+  textType?: EDataType;
   id?: number;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void;
   withLoader: boolean;
 }
 
-const CustomCardBody: FC<ICustomCardBody> = memo(({ title = '', text = '', buttonsArr, textType = EDataFileTypeField.TEXT_FILE, id = -1, onClick = () => { return }, withLoader }) => {
+const CustomCardBody: FC<ICustomCardBody> = memo(({ title = '', text = '', buttonsArr, textType = EDataType.TEXT, id = -1, onClick = () => { return }, withLoader }) => {
   const buttonColSm = Math.floor(12 / (buttonsArr.length + 1));
-  const isImage = textType === EDataFileTypeField.IMAGE;  
+  const isImage = textType === EDataType.IMAGE;  
   
   return (
     <Card.Body className={'w-100'}>

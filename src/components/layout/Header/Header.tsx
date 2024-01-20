@@ -1,12 +1,12 @@
 import {FC, memo, PropsWithChildren, useCallback, useEffect, useState} from 'react';
-import {Badge, Button, Container, Figure, Image, Navbar} from "react-bootstrap";
-import {EBootstrapColor, EBootstrapFluid} from "config/enums.ts";
+import { Button, ButtonToolbar, Container, Navbar} from "react-bootstrap";
+import {EBootstrapColor, EBootstrapFluid} from "config/enums";
+import { ICON_SIZE } from 'config/config';
 import {Link} from "react-router-dom";
-import { useUserAuth, loginUser, TLoginData, authUser } from 'store/userAuth'
+import { useUserAuth, loginUser, TLoginData, authUser, logoutUser } from 'store/userAuth'
 import Login from 'layout/Login';
 import { useAppDispatch } from 'store/hooks';
 import Icon from 'ui/Icon';
-import { useDataList } from 'store/dataList';
 
 interface IHeader extends PropsWithChildren {
     bg?: EBootstrapColor;
@@ -15,7 +15,7 @@ interface IHeader extends PropsWithChildren {
 
 const Header: FC<IHeader> = memo(({bg = EBootstrapColor.LIGHT, fluid = EBootstrapFluid.LG, children}) => {
   const dispatch = useAppDispatch();
-  const { isLogin, userData, cookie, orderId } = useUserAuth();
+  const { isLogin, username, cookie, draftId } = useUserAuth();
 
   const [showLogin, setShowLogin] = useState<boolean>(false);
 
@@ -26,7 +26,11 @@ const Header: FC<IHeader> = memo(({bg = EBootstrapColor.LIGHT, fluid = EBootstra
     dispatch(loginUser(formData));
   }, []);
 
-  const isDraftExists : Boolean = (orderId === null ? false : true);
+  const handleExitButtonPush = useCallback(() => {
+    dispatch(logoutUser());
+  }, []);
+
+  const isDraftExists : Boolean = (draftId === null ? false : true);
 
   useEffect(() => {
     if (cookie) {
@@ -46,19 +50,38 @@ const Header: FC<IHeader> = memo(({bg = EBootstrapColor.LIGHT, fluid = EBootstra
 
                 {isLogin && isDraftExists && 
                 <Link 
-                  to="/request" 
-                  state={{ id: orderId }}
+                  to="/draft-request"
+                  style={{textDecoration: 'none'}}
                 >
                   <Button className={'d-flex rounded-3 justify-content-center align-content-center'} variant={`outline-${EBootstrapColor.PRIMARY}`}>
-                    <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={20} className="d-flex align-content-center me-2"/>Заявка
+                    <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={ICON_SIZE} className="d-flex align-content-center me-2"/>Заявка
                   </Button>
                 </Link>}
 
                 {isLogin && !isDraftExists && <Button className={'d-flex rounded-3 justify-content-center align-content-center'} variant={`outline-${EBootstrapColor.PRIMARY}`}>
-                    <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={20} className="d-flex align-content-center me-2"/>Заявка
+                    <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={ICON_SIZE} className="d-flex align-content-center me-2"/>Заявка
                   </Button>}
 
-                {isLogin && <Badge bg={EBootstrapColor.PRIMARY} className={'h-100 d-flex rounded-3 justify-content-center align-content-center'}><Icon className={'me-2'} size={20} iconName='PersonCircle'/> {userData.username}</Badge>}
+                {isLogin && <ButtonToolbar className={'d-flex align-content-center'}>
+                <Link 
+                  to="/requests"
+                  style={{textDecoration: 'none'}}
+                >
+                  <Button 
+                    variant={EBootstrapColor.PRIMARY} 
+                    className={'h-100 d-flex flex-wrap rounded-3 justify-content-center align-items-center ms-2'}>
+                    <Icon className={'me-2'} size={ICON_SIZE} iconName='PersonCircle'/>
+                    {username}
+                  </Button>
+                  </Link>
+                  <Button 
+                    variant={EBootstrapColor.DANGER} 
+                    className={'h-100 d-flex rounded-3 justify-content-center align-content-center ms-2'}
+                    onClick={handleExitButtonPush}
+                    >
+                    <Icon iconName='BoxArrowRight' size={ICON_SIZE} />
+                  </Button>
+                </ButtonToolbar>}
                 {!isLogin && <><Button variant="primary" onClick={handleOpenLogin}>Войти</Button><Login show={showLogin} handleClose={handleCloseLogin} handleFormSubmit={handleFormSubmit}/></>}
               </Container>
           </Navbar>

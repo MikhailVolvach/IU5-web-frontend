@@ -4,7 +4,8 @@ import DataListPage from "pages/DataListPage";
 import DataItemPage from "pages/DataItemPage";
 import {useCallback} from "react";
 import RequestItemPage from "pages/RequestItemPage";
-// import RequestItemPage from "pages/RequestItemPage";
+import RequestItemPageWithId from "pages/RequestItemPageWithId";
+import RequestsListPage from "pages/RequestsListPage";
 
 function App() {
   const navigate = useNavigate();
@@ -24,14 +25,15 @@ function App() {
         />
         <Route
           path='/data'
-          element={<Navigate to='/' replace />} // Перенаправление на корневой маршрут при посещении /data
+          element={<Navigate to='/' replace />}
         />
         <Route
           path='/data/:id'
           element={<DataItemPage />}
         />
-        <Route path='/request/*' element={ <RequestItemPage /> }/>
-        {/* <Route path='*' element={ <Navigate to='/' replace /> } /> */}
+        <Route path='/request/:id/*' element={ <RequestItemPageWithId /> } />
+        <Route path='/draft-request/*' element={ <RequestItemPage /> }/>
+        <Route path='/requests' element={ <RequestsListPage /> }/>
       </Routes>
   )
 }

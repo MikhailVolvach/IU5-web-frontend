@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {DataEncryptionRequest} from "../../api";
 import { getEncryptionRequestsList } from "./getEncryptionRequestsList";
+import { DataEncryptionRequestModel } from "store/models";
+import { EncryptionRequestSerializer } from "store/serializers";
 
 const encryptionRequestsListSlice = createSlice({
   name: 'encryptionRequestsList',
   initialState: {
     isLoaded: false,
-    requests: Array<DataEncryptionRequest>(),
+    requests: Array<DataEncryptionRequestModel>(),
   },
   reducers: {
     setIsLoaded(state, _action) {
@@ -20,7 +21,7 @@ const encryptionRequestsListSlice = createSlice({
     builder
       .addCase(getEncryptionRequestsList.fulfilled, (state, action) => {
         state.isLoaded = false;
-        state.requests = action.payload;
+        state.requests = action.payload.map((item) => EncryptionRequestSerializer(item));
         state.isLoaded = true;
       })
       .addCase(getEncryptionRequestsList.rejected, (state, action) => {

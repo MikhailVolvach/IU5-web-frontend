@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { DataItem } from "api";
 import { getListPageData } from "./getListPageData";
+import { DataItemModel } from "store/models";
+import { DataItemSerializer } from "store/serializers";
 
 const dataListSlice = createSlice({
   name: 'dataList',
   initialState: {
     isLoaded: false,
-    data: Array<DataItem>(),
+    data: Array<DataItemModel>(),
     orderId: -1
   },
   reducers: {
@@ -26,9 +27,8 @@ const dataListSlice = createSlice({
         state.isLoaded = false;
       })
       .addCase(getListPageData.fulfilled, (state, action) => {
-        state.data = action.payload.data;
+        state.data = action.payload.data.map((item) => DataItemSerializer(item));
         state.orderId = action.payload.request_id;
-        console.log(action.payload.request_id);
         state.isLoaded = true;
       })
       .addCase(getListPageData.rejected, (state, action) => {

@@ -125,7 +125,7 @@ export class HttpClient<SecurityDataType = unknown> {
   private format?: ResponseType;
 
   constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://localhost:8000", headers: {'Content-Type': 'application/json', 'X-CSRFToken': document.cookie.split('; ').filter(row => row.startsWith('session_id=')).map(c => c.split('=')[1])[0]}, withCredentials: true });
+    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://localhost:8000" });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;

@@ -3,27 +3,34 @@ import { Container, Row, Nav } from "react-bootstrap";
 import Header from 'layout/Header';
 import { useAppDispatch } from 'store/hooks';
 import { getEncryptionRequestItem, useEncryptionRequestItem } from "store/encryptionRequestItem";
-import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import RequestItemPageData from './components/RequestItemPageData';
 import RequestItemPageInfo from './components/RequestItemPageInfo';
+import { useUserAuth } from "store/userAuth";
 
+interface IRequestItemPage {
+    orderId?: string;
+}
 
-const RequestItemPage : FC = memo(() => {
+const RequestItemPage : FC<IRequestItemPage> = memo(({orderId}) => {
     const dispatch = useAppDispatch();
-    const { state } = useLocation();
     const navigate = useNavigate();
+    const { draftId } = useUserAuth();
+    // console.log();
+
+    const id = (orderId && orderId !== '-1') ? orderId : draftId;
 
     const { requestData } = useEncryptionRequestItem();
 
     useEffect(() => {
         const fetchData = async () => {
-            dispatch(getEncryptionRequestItem(state.id));
+            dispatch(getEncryptionRequestItem(id));
         }
 
-        if (!state.id || state.id === -1) return;
+        if (!id || +id === -1) return;
 
         fetchData();
-    }, []);
+    }, [id]);
 
     const [selectedTab, setSelectedTab] = useState('info');
 

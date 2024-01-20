@@ -82,6 +82,7 @@ export interface EncryptionUser {
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 export type QueryParamsType = Record<string | number, any>;
 
@@ -126,6 +127,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
   constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
     this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://localhost:8000", headers: {'Content-Type': 'application/json', 'X-CSRFToken': document.cookie.split('; ').filter(row => row.startsWith('session_id=')).map(c => c.split('=')[1])[0]}, withCredentials: true });
+    // this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://localhost:8000", headers: {'Content-Type': 'application/json', 'X-CSRFToken': Cookies.get('session_id')}, withCredentials: true });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -449,33 +451,19 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Метод авторизации
+     * No description
      *
      * @tags api
      * @name ApiLoginCreate
      * @request POST:/api/login
      * @secure
      */
-    apiLoginCreate: (
-      data: {
-        username: string;
-        password: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<
-        {
-          username: string;
-          password: string;
-        },
-        any
-      >({
+    apiLoginCreate: (loginData: Record<string, any>, params: RequestParams = {}) =>
+      this.request<void, any>({
         path: `/api/login`,
+        body: loginData,
         method: "POST",
-        body: data,
         secure: true,
-        type: ContentType.Json,
-        format: "json",
         ...params,
       }),
 

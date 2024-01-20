@@ -2,19 +2,15 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import api, { EncryptionUser } from 'api';
 
-export type TLoginData = {
-  username: string;
-  password: string;
-}
 
 type TUserReqData = {
   user: EncryptionUser;
-  orderId: string;
+  order_id: string;
 }
 
 
-export const loginUser = createAsyncThunk<TUserReqData, TLoginData>('/login', async (loginData) : Promise<any> => {
-  return api.api.apiLoginCreate(loginData).then(({data}) => data).catch(e => Error(e));
+export const loginUser = createAsyncThunk<TUserReqData, {username: string, password: string}>('/login', async (username, password) : Promise<any> => {
+  return api.api.apiLoginCreate(username, password).then(({data}) => data).catch(e => Error(e));
 });
 
 export const logoutUser = createAsyncThunk('/logout', async () : Promise<any> => {

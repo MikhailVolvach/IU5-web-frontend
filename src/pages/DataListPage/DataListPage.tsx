@@ -1,12 +1,17 @@
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
 import { fluid } from 'config/config';
-import DataListPageContent from "./components/DataListPageContent";
+// import DataListPageContent from "./components/DataListPageContent";
 import {ChangeEvent, FC, FormEvent, memo, useCallback, useEffect, useState} from "react";
 import HeaderWithSearch from 'layout/HeaderWithSearch';
+import defaultImage from 'assets/default-image.svg';
 
 import { getListPageData, useDataList } from 'store/dataList';
 import { useAppDispatch } from 'store/hooks';
+import {Badge, Button, Card, Col} from "react-bootstrap";
+import {EIsEncrypted} from "store/enums.ts";
+import {addItemToRequest} from "store/encryptionRequestItem";
+import {Link} from "react-router-dom";
 
 export interface IDataListPage {
   searchQuery?: string;
@@ -32,6 +37,12 @@ const DataListPage : FC<IDataListPage> = memo(({searchQuery = '', searchQueryCha
     dispatch(getListPageData(searchQuery));
   }
 
+  const handleAddClick = useCallback((id: number | undefined) => {
+    // TODO: Добавить обработку некорректного добавления
+    if (!id) return;
+    dispatch(addItemToRequest(`${id}`));
+  }, []);
+
   useEffect(() => {
     fetchData();
   }, [searchQuery, dispatch]);
@@ -46,10 +57,27 @@ const DataListPage : FC<IDataListPage> = memo(({searchQuery = '', searchQueryCha
           onSubmit={handleSearchSubmit}
           onSearchChange={handleSearchChange}
         />
-        {/* <DataListPageHeader requestId={orderId} searchValue={searchValue} onSubmit={handleSearchSubmit} onSearchChange={handleSearchChange}/> */}
       </Row>
-      <Row>
-        <DataListPageContent data={data} />
+      <Row xs={1} sm={2} md={3} lg={3} xl={4} className={'d-flex gy-4 gy'} >
+        { data.map((dataItem) => (
+          <Col key={dataItem?.id} className={'d-flex justify-content-center'}>
+            <Card className={'h-100 overflow-hidden rounded-4 shadow-lg d-flex flex-column justify-content-between'} style={{ maxWidth: '17rem', width: '100%' }}>
+              <Badge className={'position-absolute top-0 end-0 me-2 mt-2'} bg={dataItem.isEncrypted === EIsEncrypted.true ? 'success' : 'danger'} >{dataItem.isEncrypted === EIsEncrypted.true ? 'Зашифровано' : 'Оригинал'}</Badge>
+              <Card.Img style={{width: '100%', maxHeight: '22.5rem', objectFit: 'fill'}} src={dataItem?.img || defaultImage} variant="top" />
+              <Card.Body className={'flex-grow-0'}>
+                <Card.Title>{dataItem?.title}</Card.Title>
+                <Row className={'g-1'}>
+                  <Col sm={12}>
+                    <Button className={'w-100'} onClick={() => handleAddClick(dataItem.id)}>Добавить</Button>
+                  </Col>
+                  <Col sm={12}>
+                    <Link className={'w-100'} to={`/data/${dataItem.id}`}><Button className={'w-100'} variant={'outline-primary'} >Подробнее</Button></Link>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+        )) }
       </Row>
     </Container>
   );

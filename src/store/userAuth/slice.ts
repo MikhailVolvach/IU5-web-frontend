@@ -1,17 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { EncryptionUser } from "../../api";
 import { loginUser, logoutUser, authUser } from "./userAuth";
 
-const sessionId = document.cookie.split('; ').filter(row => row.startsWith('session_id=')).map(c => c.split('=')[1])[0];
+function getSessionId() {
+  return document.cookie.split('; ').filter(row => row.startsWith('session_id=')).map(c => c.split('=')[1])[0];
+}
 
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    isLogin: sessionId ? true : false,
-    // isLogin: false,
-    userData: {} as EncryptionUser,
-    cookie: sessionId,
-    orderId: '-1',
+    isLogin: getSessionId() ? true : false,
+    username: '',
+    password: '',
+    cookie: getSessionId(),
+    draftId: '-1',
   },
   reducers: {
     setIsLogin(state, action) {
@@ -21,10 +22,10 @@ const userSlice = createSlice({
       return { ...state, userData: action.payload };
     },
     setCookie(state, _action) {
-      return { ...state, cookie: sessionId };
+      return { ...state, cookie: getSessionId() };
     },
-    setOrderId(state, action) {
-      return { ...state, cookie: action.payload };
+    setDraftId(state, action) {
+      return { ...state, draftId: action.payload };
     }
   },
   extraReducers: (builder) => {
@@ -33,22 +34,26 @@ const userSlice = createSlice({
         state.isLogin = false;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.userData = action.payload.user;
+        state.username = action.payload.user.username;
+        state.password = action.payload.user.password;
         state.isLogin = true;
-        state.cookie = sessionId;
-        state.orderId = action.payload.orderId;
+        state.cookie = getSessionId();
+        state.draftId = action.payload.order_id;
       })
       .addCase(logoutUser.fulfilled, (state) => {
-        state.userData = {} as EncryptionUser;
+        state.username = '';
+        state.password = '';
         state.isLogin = false;
         state.cookie = '';
+        state.draftId = '-1';
         document.cookie = '';
       })
       .addCase(authUser.fulfilled, (state, action) => {
-        state.userData = action.payload.user;
+        state.username = action.payload.user.username;
+        state.password = action.payload.user.password;
         state.isLogin = true;
-        state.cookie = sessionId;
-        state.orderId = action.payload.orderId;
+        state.cookie = getSessionId();
+        state.draftId = action.payload.order_id;
       })
   },
 })

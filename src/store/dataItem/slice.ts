@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { DataItem } from "api";
 import { getItemPageData } from "./getItemPageData";
+import { DataItemModel } from "store/models";
+import { DataItemSerializer } from "store/serializers";
 
 const dataItemSlice = createSlice({
     name: 'dataItem',
     initialState: {
         isLoaded: false,
-        data: {} as DataItem
+        data: {} as DataItemModel
     },
     reducers: {
         setIsLoaded(state, action) {
@@ -22,11 +23,10 @@ const dataItemSlice = createSlice({
                 state.isLoaded = false;
             })
             .addCase(getItemPageData.fulfilled, (state, action) => {
-                state.data = action.payload;
+                state.data = DataItemSerializer(action.payload);
                 state.isLoaded = true;
             })
-            .addCase(getItemPageData.rejected, (state, action) => {
-                console.log(state, action.payload);
+            .addCase(getItemPageData.rejected, (state) => {
                 state.isLoaded = true;
             })
 

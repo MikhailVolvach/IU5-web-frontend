@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { DataEncryptionRequest, DataItem,  } from "../../api";
+import {DataItemModel, DataEncryptionRequestModel} from '../models';
 import { getEncryptionRequestItem, addItemToRequest } from "./getEncryptionRequestItem";
+import {DataItemSerializer, EncryptionRequestSerializer} from '../serializers';
 
 const encryptionRequestItemSlice = createSlice({
   name: 'encryptionRequestItem',
   initialState: {
     isLoaded: false,
-    request: {} as DataEncryptionRequest,
-    requestData: [] as DataItem[],
+    request: {} as DataEncryptionRequestModel,
+    requestData: [] as DataItemModel[],
     user: ''
   },
   reducers: {
@@ -30,8 +31,8 @@ const encryptionRequestItemSlice = createSlice({
         state.isLoaded = false;
       })
       .addCase(getEncryptionRequestItem.fulfilled, (state, action) => {
-        state.request = action.payload.request;
-        state.requestData = action.payload.data;
+        state.request = EncryptionRequestSerializer(action.payload.request);
+        state.requestData = action.payload.data.map((dataItem) => DataItemSerializer(dataItem));
         state.user = action.payload.owner;
         state.isLoaded = true;
       })
@@ -43,17 +44,18 @@ const encryptionRequestItemSlice = createSlice({
         state.isLoaded = false;
       })
       .addCase(addItemToRequest.fulfilled, (state, action) => {
-        state.request = action.payload.request;
-        state.requestData = action.payload.data;
+        state.request = EncryptionRequestSerializer(action.payload.request);
+        state.requestData = action.payload.data.map((dataItem) => DataItemSerializer(dataItem));
         state.user = action.payload.owner;
         state.isLoaded = true;
       })
-      .addCase(addItemToRequest.rejected, (state, action) => {
-        console.log(state, action.payload);
+      .addCase(addItemToRequest.rejected, (state, _action) => {
         state.isLoaded = true;
       })
   },
 })
+
+
 
 export const { setRequest } = encryptionRequestItemSlice.actions;
 
