@@ -58,7 +58,7 @@ const RequestItemPage : FC<IRequestItemPage> = memo(({orderId}) => {
             <Row>
                 <Routes>
                     <Route path={'info'} element={<RequestItemPageInfo />} />
-                    <Route path={'service-list'} element={<RequestItemPageData requestData={requestData} />} />
+                    <Route path={'service-list'} element={<RequestItemPageData />} />
                     <Route index element={<Navigate to='info' />}/>
                 </Routes>
             </Row>
