@@ -50,8 +50,9 @@ const RequestItemPageData : FC = memo(() => {
     setCheckboxes((prevState) => {
       return prevState.map(() => !masterCheckbox);
     });
+
     setMasterCheckbox(!masterCheckbox);
-  }, []);
+  }, [masterCheckbox]);
 
 
   return (
