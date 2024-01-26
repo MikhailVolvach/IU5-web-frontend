@@ -1,16 +1,14 @@
 import {FC, memo, useCallback, useEffect, useState} from 'react';
-import {Container, Table, FormCheck} from 'react-bootstrap';
-import { DataItemModel } from 'store/models';
+import {Container, Table, FormCheck, Button, FormSelect} from 'react-bootstrap';
 import {EDataType, EIsEncrypted, EWorkStatus} from "store/enums.ts";
-// import defaultImage from "assets/default-image.svg";
 import { useNavigate } from "react-router-dom";
 import {useEncryptionRequestItem} from "store/encryptionRequestItem";
+import {useAppDispatch} from "store";
+import { deleteItemFromRequest } from 'store/encryptionRequestItem';
 
-// interface IRequestItemPageData {
-//     requestData: DataItemModel[];
-// }
 
 const RequestItemPageData : FC = memo(() => {
+  const dispatch = useAppDispatch();
   const { request, requestData } = useEncryptionRequestItem();
   const navigate = useNavigate();
 
@@ -28,9 +26,7 @@ const RequestItemPageData : FC = memo(() => {
   }, [requestData.length]);
 
   useEffect(() => {
-    if (checkboxes) {
-      console.log(checkboxes, masterCheckbox);
-    }
+    console.log(checkboxes, masterCheckbox);
 
     if (checkboxes.every(value => value === true)) {
       setMasterCheckbox(true);
@@ -46,7 +42,6 @@ const RequestItemPageData : FC = memo(() => {
   }, []);
 
   const handleMasterCheckboxChange = useCallback(() => {
-    // console.log(masterCheckbox);
     setCheckboxes((prevState) => {
       return prevState.map(() => !masterCheckbox);
     });
@@ -54,15 +49,46 @@ const RequestItemPageData : FC = memo(() => {
     setMasterCheckbox(!masterCheckbox);
   }, [masterCheckbox]);
 
+  const handleDeleteButton = useCallback(() => {
+    console.log(checkboxes);
+    checkboxes.forEach((value, index) => {
+      console.log(requestData[index].id, value);
+      if (!requestData[index].id) return;
+      if (!value) return;
+      console.log('About to be deleted');
+      dispatch(deleteItemFromRequest(`${requestData[index].id}` || '-1'))
+    })
+  }, [checkboxes]);
+
 
   return (
     <Container className={'mt-4'}>
-      <Table hover={true} responsive={true}>
+      <Table hover responsive borderless>
+        { !requestData.length && <caption className={'text-danger'}>Данных нет</caption> }
         <thead>
+        { request.workStatus === EWorkStatus.DRAFT && <tr>
+            <th className={'text-center align-middle'}>
+              {!!requestData.length && <FormCheck onChange={handleMasterCheckboxChange} checked={masterCheckbox} type={'checkbox'}/>}
+            </th>
+            <th className={'align-middle'}>{checkboxes.some(value => value === true) && <Button onClick={handleDeleteButton} size={'sm'}>Удалить</Button>}</th>
+            <th>
+              <FormSelect size="sm">
+                <option>Все статусы</option>
+                <option value={EIsEncrypted.true} className={'text-success'}>Зашифровано</option>
+                <option value={EIsEncrypted.false} className={'text-danger'}>Оригинал</option>
+              </FormSelect>
+            </th>
+            <th>
+              <FormSelect size="sm">
+                <option>Все типы файлов</option>
+                <option value={EDataType.TEXT}>Текстовый файл</option>
+                <option value={EDataType.CODE}>Код</option>
+                <option value={EDataType.CODE}>Изображение</option>
+              </FormSelect>
+            </th>
+          </tr>}
           <tr>
-            { request.workStatus === EWorkStatus.DRAFT && <th className={'text-center'}>
-                <FormCheck onChange={handleMasterCheckboxChange} checked={masterCheckbox} type={'checkbox'}/>
-            </th>}
+            <th></th>
             <th>Заголовок</th>
             <th><span className={'text-success'}>Зашифровано</span> / <span className={'text-danger'}>Оригинал</span></th>
             <th>Тип файла</th>

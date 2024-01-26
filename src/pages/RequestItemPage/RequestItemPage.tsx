@@ -1,8 +1,8 @@
 import { FC, memo, useCallback, useEffect, useState } from "react";
-import { Container, Row, Nav } from "react-bootstrap";
+import {Container, Row, Nav, ButtonGroup, Button, Col} from "react-bootstrap";
 import Header from 'layout/Header';
 import { useAppDispatch } from 'store/hooks';
-import { getEncryptionRequestItem, useEncryptionRequestItem } from "store/encryptionRequestItem";
+import { getEncryptionRequestItem, formRequestItem } from "store/encryptionRequestItem";
 import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import RequestItemPageData from './components/RequestItemPageData';
 import RequestItemPageInfo from './components/RequestItemPageInfo';
@@ -16,11 +16,8 @@ const RequestItemPage : FC<IRequestItemPage> = memo(({orderId}) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { draftId } = useUserAuth();
-    // console.log();
 
     const id = (orderId && orderId !== '-1') ? orderId : draftId;
-
-    const { requestData } = useEncryptionRequestItem();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,6 +35,11 @@ const RequestItemPage : FC<IRequestItemPage> = memo(({orderId}) => {
     const handleSelect = useCallback((e) => {
         setSelectedTab(e);
         navigate(e);
+    }, []);
+
+    const formRequest = useCallback(() => {
+      dispatch(formRequestItem());
+      navigate('/');
     }, []);
 
     return (
@@ -61,6 +63,14 @@ const RequestItemPage : FC<IRequestItemPage> = memo(({orderId}) => {
                     <Route path={'service-list'} element={<RequestItemPageData />} />
                     <Route index element={<Navigate to='info' />}/>
                 </Routes>
+            </Row>
+            <Row className={'mt-4'}>
+                <Col sm={3}>
+                    <ButtonGroup>
+                        <Button onClick={formRequest} variant={'success'}>Сформировать</Button>
+                        <Button variant={'danger'}>Удалить</Button>
+                    </ButtonGroup>
+                </Col>
             </Row>
         </Container>
     );

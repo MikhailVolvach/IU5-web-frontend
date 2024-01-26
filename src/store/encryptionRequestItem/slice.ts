@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {DataItemModel, DataEncryptionRequestModel} from '../models';
-import { getEncryptionRequestItem, addItemToRequest } from "./getEncryptionRequestItem";
+import {
+  getEncryptionRequestItem,
+  addItemToRequest,
+  deleteItemFromRequest,
+  formRequestItem,
+} from "./getEncryptionRequestItem";
 import {DataItemSerializer, EncryptionRequestSerializer} from '../serializers';
 
 const encryptionRequestItemSlice = createSlice({
@@ -50,6 +55,28 @@ const encryptionRequestItemSlice = createSlice({
         state.isLoaded = true;
       })
       .addCase(addItemToRequest.rejected, (state, _action) => {
+        state.isLoaded = true;
+      })
+      .addCase(deleteItemFromRequest.pending, (state) => {
+        state.isLoaded = false;
+      })
+      .addCase(deleteItemFromRequest.fulfilled, (state, action) => {
+        state.request = EncryptionRequestSerializer(action.payload.request);
+        state.requestData = action.payload.data.map((dataItem) => DataItemSerializer(dataItem));
+        state.user = action.payload.owner;
+        state.isLoaded = true;
+      })
+      .addCase(deleteItemFromRequest.rejected, (state) => {
+        state.isLoaded = true;
+      })
+      .addCase(formRequestItem.pending, (state) => {
+        state.isLoaded = false;
+      })
+      .addCase(formRequestItem.fulfilled, (state, action) => {
+        state.request = EncryptionRequestSerializer(action.payload);
+        state.isLoaded = true;
+      })
+      .addCase(formRequestItem.rejected, (state) => {
         state.isLoaded = true;
       })
   },

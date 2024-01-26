@@ -125,7 +125,7 @@ export class HttpClient<SecurityDataType = unknown> {
   private format?: ResponseType;
 
   constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://localhost:8000", headers: {'Content-Type': 'application/json', 'X-CSRFToken': document.cookie.split('; ').filter(row => row.startsWith('session_id=')).map(c => c.split('=')[1])[0]}, withCredentials: true });
+    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://localhost:8000" });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -370,13 +370,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PUT:/api/encryption-requests/form/
      * @secure
      */
-    apiEncryptionRequestsFormUpdate: (data: DataEncryptionRequest, params: RequestParams = {}) =>
-      this.request<DataEncryptionRequest, any>({
+    apiEncryptionRequestsFormUpdate: (params: RequestParams = {}) =>
+      this.request<void, any>({
         path: `/api/encryption-requests/form/`,
         method: "PUT",
-        body: data,
         secure: true,
-        format: "json",
         ...params,
       }),
 
@@ -410,6 +408,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "PUT",
         body: data,
         secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -431,19 +430,31 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * No description
+     * @description Метод изменения статуса заявки
      *
      * @tags api
      * @name ApiEncryptionRequestsChangeStatusUpdate
      * @request PUT:/api/encryption-requests/{id}/change-status/
      * @secure
      */
-    apiEncryptionRequestsChangeStatusUpdate: (id: string, data: DataEncryptionRequest, params: RequestParams = {}) =>
-      this.request<DataEncryptionRequest, any>({
+    apiEncryptionRequestsChangeStatusUpdate: (
+      id: string,
+      data: {
+        status: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<
+        {
+          status: string;
+        },
+        any
+      >({
         path: `/api/encryption-requests/${id}/change-status/`,
         method: "PUT",
         body: data,
         secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
