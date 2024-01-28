@@ -5,16 +5,27 @@ import {
   addItemToRequest,
   deleteItemFromRequest,
   formRequestItem,
+  deleteRequestItem
 } from "./getEncryptionRequestItem";
-import {DataItemSerializer, EncryptionRequestSerializer} from '../serializers';
+import {DataItemSerializer, EncryptionRequestSerializer, getWorkStatus} from '../serializers';
+import { EWorkStatus } from "store/enums";
+
+interface IInitialState {
+  isLoaded: boolean;
+  request: DataEncryptionRequestModel;
+  requestData: DataItemModel[];
+  user: string;
+  requestStatus: EWorkStatus | null;
+}
 
 const encryptionRequestItemSlice = createSlice({
   name: 'encryptionRequestItem',
-  initialState: {
+  initialState: <IInitialState>{
     isLoaded: false,
     request: {} as DataEncryptionRequestModel,
     requestData: [] as DataItemModel[],
-    user: ''
+    user: '',
+    requestStatus: null
   },
   reducers: {
     setIsLoaded(state, _action) {
@@ -40,11 +51,13 @@ const encryptionRequestItemSlice = createSlice({
         state.requestData = action.payload.data.map((dataItem) => DataItemSerializer(dataItem));
         state.user = action.payload.owner;
         state.isLoaded = true;
+        state.requestStatus = getWorkStatus(action.payload.request.work_status || EWorkStatus.DRAFT);
       })
       .addCase(getEncryptionRequestItem.rejected, (state, action) => {
         console.log(state, action.payload);
         state.isLoaded = true;
       })
+
       .addCase(addItemToRequest.pending, (state) => {
         state.isLoaded = false;
       })
@@ -53,10 +66,12 @@ const encryptionRequestItemSlice = createSlice({
         state.requestData = action.payload.data.map((dataItem) => DataItemSerializer(dataItem));
         state.user = action.payload.owner;
         state.isLoaded = true;
+        state.requestStatus = getWorkStatus(action.payload.request.work_status || EWorkStatus.DRAFT);
       })
       .addCase(addItemToRequest.rejected, (state, _action) => {
         state.isLoaded = true;
       })
+
       .addCase(deleteItemFromRequest.pending, (state) => {
         state.isLoaded = false;
       })
@@ -65,18 +80,33 @@ const encryptionRequestItemSlice = createSlice({
         state.requestData = action.payload.data.map((dataItem) => DataItemSerializer(dataItem));
         state.user = action.payload.owner;
         state.isLoaded = true;
+        state.requestStatus = getWorkStatus(action.payload.request.work_status || EWorkStatus.DRAFT);
       })
       .addCase(deleteItemFromRequest.rejected, (state) => {
         state.isLoaded = true;
       })
+
       .addCase(formRequestItem.pending, (state) => {
         state.isLoaded = false;
       })
       .addCase(formRequestItem.fulfilled, (state, action) => {
         state.request = EncryptionRequestSerializer(action.payload);
         state.isLoaded = true;
+        state.requestStatus = getWorkStatus(action.payload.work_status || EWorkStatus.FORMED);
       })
       .addCase(formRequestItem.rejected, (state) => {
+        state.isLoaded = true;
+      })
+
+      .addCase(deleteRequestItem.pending, (state) => {
+        state.isLoaded = false;
+      })
+      .addCase(deleteRequestItem.fulfilled, (state) => {
+        state.request = {} as DataEncryptionRequestModel;
+        state.isLoaded = true;
+        state.requestStatus = null;
+      })
+      .addCase(deleteRequestItem.rejected, (state) => {
         state.isLoaded = true;
       })
   },

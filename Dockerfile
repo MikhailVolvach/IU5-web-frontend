@@ -1,5 +1,6 @@
 FROM node:18-alpine
-WORKDIR /var/www/frontend
+
+WORKDIR /opt/project
 
 COPY package.json ./
 COPY yarn.lock ./

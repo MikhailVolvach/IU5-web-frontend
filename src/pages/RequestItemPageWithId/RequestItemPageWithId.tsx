@@ -1,4 +1,3 @@
-import React from 'react';
 import RequestItemPage from 'pages/RequestItemPage';
 import { useParams } from 'react-router-dom';
 

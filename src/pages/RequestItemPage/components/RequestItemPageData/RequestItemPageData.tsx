@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import {useEncryptionRequestItem} from "store/encryptionRequestItem";
 import {useAppDispatch} from "store";
 import { deleteItemFromRequest } from 'store/encryptionRequestItem';
+import { EBootstrapColor } from 'config/enums';
+import { DataItemModel } from 'store/models';
 
 
 const RequestItemPageData : FC = memo(() => {
@@ -15,18 +17,23 @@ const RequestItemPageData : FC = memo(() => {
   const [masterCheckbox, setMasterCheckbox] = useState(false);
   const [checkboxes, setCheckboxes] = useState<boolean[]>([]);
 
+  const [statusSelect, setStatusSelect] = useState<EIsEncrypted | 0>(0);
+  const [typeSelect, setTypeSelect] = useState<EDataType>();
+  const [data, setData] = useState<DataItemModel[]>([]); // Этот массив нужен для отображения отфильтрованных данных. Фильтровать будем по статусу и по типу, используя FormSelect
+
   const handleRowClick = useCallback((id: number | undefined) => {
     if (!id) return;
     navigate(`/data/${id}`);
   }, []);
 
+  // Отрабатывает при изменении requestData, т.е. в момент удаления из заявки и первом рендере
   useEffect(() => {
     setMasterCheckbox(false);
     setCheckboxes(Array(requestData.length).fill(false));
+    setData(requestData);
   }, [requestData.length]);
 
   useEffect(() => {
-    console.log(checkboxes, masterCheckbox);
 
     if (checkboxes.every(value => value === true)) {
       setMasterCheckbox(true);
@@ -34,6 +41,16 @@ const RequestItemPageData : FC = memo(() => {
       setMasterCheckbox(false);
     }
   }, [checkboxes, masterCheckbox]);
+
+  // Отрабатывает при изменении статуса для фильтрации отображаемых данных
+  useEffect(() => {
+    if (statusSelect === 0) {
+      setData(requestData);
+    } else {
+      setData(requestData.filter((value) => value.isEncrypted === statusSelect));
+    }
+    
+  }, [statusSelect, requestData.length]);
 
   const handleCheckboxChange = useCallback((index: number) => {
     setCheckboxes((prevState) => {
@@ -50,30 +67,35 @@ const RequestItemPageData : FC = memo(() => {
   }, [masterCheckbox]);
 
   const handleDeleteButton = useCallback(() => {
-    console.log(checkboxes);
     checkboxes.forEach((value, index) => {
-      console.log(requestData[index].id, value);
-      if (!requestData[index].id) return;
+      if (!data[index].id) return;
       if (!value) return;
-      console.log('About to be deleted');
-      dispatch(deleteItemFromRequest(`${requestData[index].id}` || '-1'))
+      dispatch(deleteItemFromRequest(`${data[index].id}` || '-1'))
     })
   }, [checkboxes]);
+
+  const handleStatusChange = useCallback((e: any) => {
+    setStatusSelect(+e.target.value);
+  }, []);
+
+  const handleTypeChange = useCallback((e: any) => {
+    set
+  })
 
 
   return (
     <Container className={'mt-4'}>
       <Table hover responsive borderless>
-        { !requestData.length && <caption className={'text-danger'}>Данных нет</caption> }
+        { !data.length && <caption className={'text-danger'}>Данных нет</caption> }
         <thead>
         { request.workStatus === EWorkStatus.DRAFT && <tr>
             <th className={'text-center align-middle'}>
-              {!!requestData.length && <FormCheck onChange={handleMasterCheckboxChange} checked={masterCheckbox} type={'checkbox'}/>}
+              {!!data.length && <FormCheck onChange={handleMasterCheckboxChange} checked={masterCheckbox} type={'checkbox'}/>}
             </th>
-            <th className={'align-middle'}>{checkboxes.some(value => value === true) && <Button onClick={handleDeleteButton} size={'sm'}>Удалить</Button>}</th>
+            <th className={'align-middle'}>{checkboxes.some(value => value === true) && <Button onClick={handleDeleteButton} variant={EBootstrapColor.DANGER} size={'sm'}>Удалить</Button>}</th>
             <th>
-              <FormSelect size="sm">
-                <option>Все статусы</option>
+              <FormSelect value={statusSelect} onChange={handleStatusChange} size="sm">
+                <option value={0}>Все статусы</option>
                 <option value={EIsEncrypted.true} className={'text-success'}>Зашифровано</option>
                 <option value={EIsEncrypted.false} className={'text-danger'}>Оригинал</option>
               </FormSelect>
@@ -83,7 +105,7 @@ const RequestItemPageData : FC = memo(() => {
                 <option>Все типы файлов</option>
                 <option value={EDataType.TEXT}>Текстовый файл</option>
                 <option value={EDataType.CODE}>Код</option>
-                <option value={EDataType.CODE}>Изображение</option>
+                <option value={EDataType.IMAGE}>Изображение</option>
               </FormSelect>
             </th>
           </tr>}
@@ -95,7 +117,7 @@ const RequestItemPageData : FC = memo(() => {
           </tr>
         </thead>
         <tbody>
-        {requestData.map((dataItem, index) => {
+        {data.map((dataItem, index) => {
           const status = dataItem.isEncrypted === EIsEncrypted.true ? <span className={'text-success'}>Зашифровано</span> : <span className={'text-danger'}>Оригинал</span>;
           const type = dataItem.dataType === EDataType.TEXT ? 'Текстовый файл' : dataItem.dataType === EDataType.CODE ? 'Код' : 'Изображение';
 

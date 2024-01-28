@@ -1,17 +1,21 @@
-import { ChangeEvent, FC, FormEvent, useCallback, useState } from "react";
+import { ChangeEvent, FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { memo } from "react";
 import { FloatingLabel, Modal } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { TLoginData } from "store/userAuth";
+import {loginUser, useUserAuth} from "store/userAuth";
+import { useAppDispatch } from "store";
 
 interface ILogin {
   show?: boolean;
   handleClose?: () => void;
-  handleFormSubmit?: (loginData: TLoginData) => void;
 }
 
-const Login : FC<ILogin> = memo(({show = false, handleClose = () => null, handleFormSubmit = () => null}) => {
+const Login : FC<ILogin> = memo(({ show = false, handleClose = () => null }) => {
+  const dispatch = useAppDispatch();
+
+  const { isLogin } = useUserAuth();
+
   const [validated, setValidated] = useState(false);
 
   const [username, setUsername] = useState<string>('');
@@ -33,21 +37,23 @@ const Login : FC<ILogin> = memo(({show = false, handleClose = () => null, handle
 
     const form = e.currentTarget;
 
-    // Проверяем валидность формы с использованием Bootstrap
-    if (form.checkValidity() === false) {
+    // Проверяем валидность формы
+    if (!form.checkValidity()) {
       e.stopPropagation();
     } else {
       // @ts-ignore
-      handleFormSubmit({username: e.target[0]?.value, password: e.target[1]?.value})
+      dispatch(loginUser({username: e.target[0]?.value, password: e.target[1]?.value}));
+    }
+  }, []);
 
+  useEffect(() => {
+    if (isLogin && show) {
       setUsername('');
       setPassword('');
-
       handleClose();
+      setValidated(true);
     }
-
-    setValidated(true);
-  }, []);
+  }, [isLogin])
 
 
   return (
@@ -62,7 +68,7 @@ const Login : FC<ILogin> = memo(({show = false, handleClose = () => null, handle
             label="Имя пользователя"
             className="mb-3"
           >
-            <Form.Control value={username} name="username" type="text" placeholder="Имя пользователя" onChange={handleUsernameChange}/>
+            <Form.Control value={username} name="username" type="text" placeholder="Имя пользователя" onChange={handleUsernameChange} autoFocus/>
           </FloatingLabel>
 
           <FloatingLabel

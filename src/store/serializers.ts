@@ -19,7 +19,7 @@ const getDataType = (dataType : 1 | 2 | 3) : EDataType => {
     }
 }
 
-const getWorkStatus = (workStatus : "Черновик" | "Сформирован" | "Завершён" | "Отменён" | "Удалён") : EWorkStatus => {
+export const getWorkStatus = (workStatus : "Черновик" | "Сформирован" | "Завершён" | "Отменён" | "Удалён") : EWorkStatus => {
     switch (workStatus) {
         case "Черновик":
             return EWorkStatus.DRAFT;

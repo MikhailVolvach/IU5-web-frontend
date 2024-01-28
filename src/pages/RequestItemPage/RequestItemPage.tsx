@@ -2,7 +2,8 @@ import { FC, memo, useCallback, useEffect, useState } from "react";
 import {Container, Row, Nav, ButtonGroup, Button, Col} from "react-bootstrap";
 import Header from 'layout/Header';
 import { useAppDispatch } from 'store/hooks';
-import { getEncryptionRequestItem, formRequestItem } from "store/encryptionRequestItem";
+import { getEncryptionRequestItem, formRequestItem, deleteRequestItem, useEncryptionRequestItem } from "store/encryptionRequestItem";
+import { EWorkStatus } from 'store/enums';
 import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import RequestItemPageData from './components/RequestItemPageData';
 import RequestItemPageInfo from './components/RequestItemPageInfo';
@@ -12,10 +13,11 @@ interface IRequestItemPage {
     orderId?: string;
 }
 
-const RequestItemPage : FC<IRequestItemPage> = memo(({orderId}) => {
+const RequestItemPage : FC<IRequestItemPage> = memo(({orderId = '-1'}) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { draftId } = useUserAuth();
+    const { requestStatus } = useEncryptionRequestItem();
 
     const id = (orderId && orderId !== '-1') ? orderId : draftId;
 
@@ -23,9 +25,9 @@ const RequestItemPage : FC<IRequestItemPage> = memo(({orderId}) => {
         const fetchData = async () => {
             dispatch(getEncryptionRequestItem(id));
         }
-
+        
         if (!id || +id === -1) return;
-
+        
         fetchData();
     }, [id]);
 
@@ -41,6 +43,12 @@ const RequestItemPage : FC<IRequestItemPage> = memo(({orderId}) => {
       dispatch(formRequestItem());
       navigate('/');
     }, []);
+    
+    const deleteRequest = useCallback(() => {
+        dispatch(deleteRequestItem(id));
+        navigate('/');
+    }, [id]);
+    
 
     return (
         <Container>
@@ -48,14 +56,22 @@ const RequestItemPage : FC<IRequestItemPage> = memo(({orderId}) => {
                 <Header />
             </Row>
             <Row>
-            <Nav variant="tabs" defaultActiveKey='info' activeKey={selectedTab} onSelect={handleSelect}>
-                <Nav.Item>
-                    <Nav.Link eventKey='info' onClick={(e) => {e.preventDefault()}}>Информация о заявке</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey='service-list'>Список услуг</Nav.Link>
-                </Nav.Item>
-            </Nav>
+                <Col className={'ps-0'}>
+                    <Nav variant="tabs" defaultActiveKey='info' activeKey={selectedTab} onSelect={handleSelect}>
+                        <Nav.Item>
+                            <Nav.Link eventKey='info' onClick={(e) => {e.preventDefault()}}>Информация о заявке</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey='service-list'>Список услуг</Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+                </Col>
+                {requestStatus === EWorkStatus.DRAFT && <Col sm={'auto'} className={'d-flex justify-content-end pe-0'}>
+                    <ButtonGroup>
+                        <Button onClick={formRequest} variant={'success'}>Сформировать</Button>
+                        <Button onClick={deleteRequest} variant={'danger'}>Удалить</Button>
+                    </ButtonGroup>
+                </Col>}
             </Row>
             <Row>
                 <Routes>
@@ -63,14 +79,6 @@ const RequestItemPage : FC<IRequestItemPage> = memo(({orderId}) => {
                     <Route path={'service-list'} element={<RequestItemPageData />} />
                     <Route index element={<Navigate to='info' />}/>
                 </Routes>
-            </Row>
-            <Row className={'mt-4'}>
-                <Col sm={3}>
-                    <ButtonGroup>
-                        <Button onClick={formRequest} variant={'success'}>Сформировать</Button>
-                        <Button variant={'danger'}>Удалить</Button>
-                    </ButtonGroup>
-                </Col>
             </Row>
         </Container>
     );
