@@ -19,7 +19,7 @@ const Header: FC<IHeader> = memo(({ bg = EBootstrapColor.LIGHT, fluid = EBootstr
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { isLogin, username, cookie, draftId } = useUserAuth();
+  const { isLogin, username, cookie, draftId, role } = useUserAuth();
   const { requestStatus } = useEncryptionRequestItem();
 
   const [showLogin, setShowLogin] = useState<boolean>(false);
@@ -33,7 +33,7 @@ const Header: FC<IHeader> = memo(({ bg = EBootstrapColor.LIGHT, fluid = EBootstr
   }, []);
 
   // const isDraftExists: Boolean = (draftId === null && requestStatus !== EWorkStatus.DRAFT ? false : true);
-  const isDraftExists: Boolean = (requestStatus === EWorkStatus.DRAFT || draftId) ? true : false;
+  const isDraftExists: Boolean = !!(requestStatus === EWorkStatus.DRAFT || draftId);
 
   const handleDraftLinkClick = useCallback(() => {
     navigate('/draft-request');
@@ -56,7 +56,7 @@ const Header: FC<IHeader> = memo(({ bg = EBootstrapColor.LIGHT, fluid = EBootstr
           {children && <Navbar.Toggle aria-controls="basic-navbar-nav" />}
           {children && <Navbar.Collapse id="basic-navbar-nav">{children}</Navbar.Collapse>}
 
-          {isLogin && <Button disabled={!isDraftExists} onClick={handleDraftLinkClick} className={'d-flex rounded-3 justify-content-center align-content-center'} variant={'outline-' + EBootstrapColor.PRIMARY}>
+          {isLogin && role === 1 && <Button disabled={!isDraftExists} onClick={handleDraftLinkClick} className={'d-flex rounded-3 justify-content-center align-content-center'} variant={'outline-' + EBootstrapColor.PRIMARY}>
             <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={ICON_SIZE} className="d-flex align-content-center me-2" />Заявка
           </Button>}
 

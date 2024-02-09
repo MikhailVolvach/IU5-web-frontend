@@ -18,7 +18,7 @@ const RequestItemPageData : FC = memo(() => {
   const [checkboxes, setCheckboxes] = useState<boolean[]>([]);
 
   const [statusSelect, setStatusSelect] = useState<EIsEncrypted | 0>(0);
-  const [typeSelect, setTypeSelect] = useState<EDataType>();
+  const [typeSelect, setTypeSelect] = useState<EDataType | 0>(0);
   const [data, setData] = useState<DataItemModel[]>([]); // Этот массив нужен для отображения отфильтрованных данных. Фильтровать будем по статусу и по типу, используя FormSelect
 
   const handleRowClick = useCallback((id: number | undefined) => {
@@ -44,13 +44,30 @@ const RequestItemPageData : FC = memo(() => {
 
   // Отрабатывает при изменении статуса для фильтрации отображаемых данных
   useEffect(() => {
-    if (statusSelect === 0) {
+    if (statusSelect === 0 && typeSelect === 0) {
       setData(requestData);
-    } else {
-      setData(requestData.filter((value) => value.isEncrypted === statusSelect));
+      return;
     }
-    
-  }, [statusSelect, requestData.length]);
+
+    if (statusSelect !== 0 && typeSelect === 0) {
+      setData(requestData.filter((value) => value.isEncrypted === statusSelect));
+      return;
+    }
+
+    if (statusSelect === 0 && typeSelect !== 0) {
+      setData(requestData.filter((value) => value.dataType === typeSelect));
+      return;
+    }
+
+    setData(requestData.filter((value) => value.isEncrypted === statusSelect).filter((value) => value.dataType === typeSelect));
+    //
+    // if (statusSelect === 0) {
+    //   setData(requestData);
+    // } else {
+    //   setData(requestData.filter((value) => value.isEncrypted === statusSelect));
+    // }
+    //
+  }, [statusSelect, typeSelect, requestData.length]);
 
   const handleCheckboxChange = useCallback((index: number) => {
     setCheckboxes((prevState) => {
@@ -79,8 +96,8 @@ const RequestItemPageData : FC = memo(() => {
   }, []);
 
   const handleTypeChange = useCallback((e: any) => {
-    set
-  })
+    setTypeSelect(+e.target.value);
+  }, []);
 
 
   return (
@@ -101,8 +118,8 @@ const RequestItemPageData : FC = memo(() => {
               </FormSelect>
             </th>
             <th>
-              <FormSelect size="sm">
-                <option>Все типы файлов</option>
+              <FormSelect size="sm" onChange={handleTypeChange} value={typeSelect}>
+                <option value={0}>Все типы файлов</option>
                 <option value={EDataType.TEXT}>Текстовый файл</option>
                 <option value={EDataType.CODE}>Код</option>
                 <option value={EDataType.IMAGE}>Изображение</option>
