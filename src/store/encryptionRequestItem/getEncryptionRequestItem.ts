@@ -27,3 +27,12 @@ export const formRequestItem = createAsyncThunk<DataEncryptionRequest>('/encrypt
 export const deleteRequestItem = createAsyncThunk<DataEncryptionRequest, string>('/encryption-requests/delete', async (id) : Promise<any> => {
   return api.api.apiEncryptionRequestsDelete(id).then(({data}) => data).catch(e => Error(e));
 });
+
+type changeReqStatusInput = {
+  id: string,
+  status: string
+}
+
+export const changeReqStatus = createAsyncThunk<DataEncryptionRequest, changeReqStatusInput>('/encryption-requests/changeStatus', async (item) : Promise<any> => {
+  return api.api.apiEncryptionRequestsChangeStatusUpdate(item.id, { status: item.status }).then(({data}) => data).catch(e => Error(e));
+})

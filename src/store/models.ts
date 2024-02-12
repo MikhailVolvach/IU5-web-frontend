@@ -1,11 +1,11 @@
 import { EDataType, EIsEncrypted, EAction, EWorkStatus } from './enums';
 
 export interface DataItemModel {
-    id?: number;
+    id: number;
     img?: string;
-    title?: string;
+    title: string;
     file?: string;
-    isEncrypted?: EIsEncrypted;
+    isEncrypted: EIsEncrypted;
     isDeleted?: Boolean;
     dataType?: EDataType;
 };

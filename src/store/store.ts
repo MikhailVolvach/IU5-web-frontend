@@ -4,6 +4,7 @@ import dataItemReducer from './dataItem';
 import encryptionRequestsListReducer from './encryptionRequestsList';
 import encryptionRequestsItemReducer from './encryptionRequestItem';
 import userReducer from './userAuth';
+import usersListReducer from "./usersList";
 
 const store = configureStore({
   reducer: combineReducers({
@@ -11,7 +12,8 @@ const store = configureStore({
     dataItem: dataItemReducer,
     encryptionRequestsList: encryptionRequestsListReducer,
     encryptionRequestItem: encryptionRequestsItemReducer,
-    userAuth: userReducer
+    userAuth: userReducer,
+    usersList: usersListReducer
   })
 })
 

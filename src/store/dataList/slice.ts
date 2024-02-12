@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getListPageData } from "./getListPageData";
+import { getListPageData, addDataItem } from "./getListPageData";
 import { DataItemModel } from "store/models";
 import { DataItemSerializer } from "store/serializers";
 
@@ -33,6 +33,16 @@ const dataListSlice = createSlice({
       })
       .addCase(getListPageData.rejected, (state, action) => {
         console.log(state, action.payload);
+        state.isLoaded = true;
+      })
+      .addCase(addDataItem.pending, (state) => {
+        state.isLoaded = false;
+      })
+      .addCase(addDataItem.fulfilled, (state, action) => {
+        state.data = action.payload.map((item) => DataItemSerializer(item));
+        state.isLoaded = true;
+      })
+      .addCase(addDataItem.rejected, (state) => {
         state.isLoaded = true;
       })
   },

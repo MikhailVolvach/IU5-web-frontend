@@ -1,5 +1,5 @@
 import { FC, memo, useCallback, useEffect, useState } from "react";
-import {Container, Row, Nav, ButtonGroup, Button, Col} from "react-bootstrap";
+import {Container, Row, Nav, ButtonGroup, Button, Col, Form} from "react-bootstrap";
 import Header from 'layout/Header';
 import { useAppDispatch } from 'store/hooks';
 import { getEncryptionRequestItem, formRequestItem, deleteRequestItem, useEncryptionRequestItem } from "store/encryptionRequestItem";
@@ -8,6 +8,7 @@ import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import RequestItemPageData from './components/RequestItemPageData';
 import RequestItemPageInfo from './components/RequestItemPageInfo';
 import { useUserAuth } from "store/userAuth";
+import {changeReqStatus} from "store/encryptionRequestItem/getEncryptionRequestItem.ts";
 
 interface IRequestItemPage {
     orderId?: string;
@@ -16,7 +17,7 @@ interface IRequestItemPage {
 const RequestItemPage : FC<IRequestItemPage> = memo(({orderId = '-1'}) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { draftId } = useUserAuth();
+    const { draftId, role } = useUserAuth();
     const { requestStatus } = useEncryptionRequestItem();
 
     const id = (orderId && orderId !== '-1') ? orderId : draftId;
@@ -48,7 +49,12 @@ const RequestItemPage : FC<IRequestItemPage> = memo(({orderId = '-1'}) => {
         dispatch(deleteRequestItem(id));
         navigate('/');
     }, [id]);
-    
+
+    const setReqStatus = useCallback((event) => {
+        // console.log(event.target.value);
+        console.log(id);
+        dispatch(changeReqStatus({id: id, status: event.target.value}));
+    }, []);
 
     return (
         <Container>
@@ -66,11 +72,16 @@ const RequestItemPage : FC<IRequestItemPage> = memo(({orderId = '-1'}) => {
                         </Nav.Item>
                     </Nav>
                 </Col>
-                {requestStatus === EWorkStatus.DRAFT && <Col sm={'auto'} className={'d-flex justify-content-end pe-0'}>
+                {requestStatus === EWorkStatus.DRAFT && role === 1 && <Col sm={'auto'} className={'d-flex justify-content-end pe-0'}>
                     <ButtonGroup>
                         <Button onClick={formRequest} variant={'success'}>Сформировать</Button>
                         <Button onClick={deleteRequest} variant={'danger'}>Удалить</Button>
                     </ButtonGroup>
+                </Col>}
+                {role !== 1 && <Col sm={'auto'} className={'d-flex justify-content-end pe-0'}>
+                    <Form.Select value={requestStatus} onChange={setReqStatus}>
+                        {Object.values(EWorkStatus).map(status => <option value={status}>{status}</option>)}
+                    </Form.Select>
                 </Col>}
             </Row>
             <Row>

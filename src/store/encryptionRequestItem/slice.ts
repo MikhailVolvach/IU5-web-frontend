@@ -5,7 +5,8 @@ import {
   addItemToRequest,
   deleteItemFromRequest,
   formRequestItem,
-  deleteRequestItem
+  deleteRequestItem,
+  changeReqStatus
 } from "./getEncryptionRequestItem";
 import {DataItemSerializer, EncryptionRequestSerializer, getWorkStatus} from '../serializers';
 import { EWorkStatus } from "store/enums";
@@ -107,6 +108,17 @@ const encryptionRequestItemSlice = createSlice({
         state.requestStatus = null;
       })
       .addCase(deleteRequestItem.rejected, (state) => {
+        state.isLoaded = true;
+      })
+      .addCase(changeReqStatus.pending, (state) => {
+        state.isLoaded = false;
+      })
+      .addCase(changeReqStatus.fulfilled, (state, action) => {
+        state.request = EncryptionRequestSerializer(action.payload);
+        state.isLoaded = true;
+        state.requestStatus = getWorkStatus(action.payload.work_status || EWorkStatus.FORMED);
+      })
+      .addCase(changeReqStatus.rejected, (state) => {
         state.isLoaded = true;
       })
   },

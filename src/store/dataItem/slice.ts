@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getItemPageData } from "./getItemPageData";
+import { getItemPageData, changeDataItem, deleteDataItem } from "./getItemPageData";
 import { DataItemModel } from "store/models";
 import { DataItemSerializer } from "store/serializers";
 
@@ -29,6 +29,26 @@ const dataItemSlice = createSlice({
             .addCase(getItemPageData.rejected, (state) => {
                 state.isLoaded = true;
             })
+          .addCase(changeDataItem.pending, (state) => {
+              state.isLoaded = false;
+          })
+          .addCase(changeDataItem.fulfilled, (state, action) => {
+              state.data = DataItemSerializer(action.payload);
+              state.isLoaded = true;
+          })
+          .addCase(changeDataItem.rejected, (state) => {
+              state.isLoaded = true;
+          })
+          .addCase(deleteDataItem.pending, (state) => {
+              state.isLoaded = false;
+          })
+          .addCase(deleteDataItem.fulfilled, (state) => {
+              state.data = {} as DataItemModel;
+              state.isLoaded = true;
+          })
+          .addCase(deleteDataItem.rejected, (state) => {
+              state.isLoaded = true;
+          })
 
     }
 })

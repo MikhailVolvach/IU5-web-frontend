@@ -1,5 +1,5 @@
 import {FC, memo} from "react";
-import {Badge, Placeholder} from "react-bootstrap";
+import {Badge} from "react-bootstrap";
 import { EBootstrapColor } from "config/enums.ts";
 
 export interface ICustomBadge {

@@ -354,10 +354,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/encryption-requests/
      * @secure
      */
-    apiEncryptionRequestsList: (params: RequestParams = {}) =>
+    apiEncryptionRequestsList: (
+      query?: {
+        start_date?: string;
+        end_date?: string;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<void, any>({
         path: `/api/encryption-requests/`,
         method: "GET",
+        query: query,
         secure: true,
         ...params,
       }),
