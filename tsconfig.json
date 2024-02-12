@@ -31,7 +31,9 @@
       "assets/*": ["assets/*"],
       "store/*": ["store/*"],
       "src/*": ["/*"],
+      "api/*": ["/api/*"]
     },
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

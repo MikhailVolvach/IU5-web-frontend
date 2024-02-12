@@ -4,8 +4,7 @@ import { generateApi } from 'swagger-typescript-api';
 
 generateApi({
   name: 'Api.ts',
+  input: resolve(process.cwd(), './src/utils/swagger.json'),
   output: resolve(process.cwd(), './src/api'),
-  // input: resolve(process.cwd(), './src/swagger/petstore.yml'),
-  url: 'http://127.0.0.1:8000/swagger/?format=openapi',
-  httpClientType: 'axios',
+  httpClientType: 'axios', 
 });

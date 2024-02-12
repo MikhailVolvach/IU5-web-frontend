@@ -13,7 +13,7 @@ export const fluid = EBootstrapFluid.SM;
 //     }
 // ]
 
-// export const CardButtonsArr = ['ADD']
-export const CardButtonsArr = [];
-
+export const CardButtonsArr = ['ADD'];
+// export const CardButtonsArr = [];
+export const ICON_SIZE = 24;
 export const API_URL = 'http://localhost:8000/api';

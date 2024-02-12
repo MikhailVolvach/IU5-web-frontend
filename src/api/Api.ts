@@ -125,7 +125,7 @@ export class HttpClient<SecurityDataType = unknown> {
   private format?: ResponseType;
 
   constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://127.0.0.1:8000" });
+    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://localhost:8000", headers: {'Content-Type': 'application/json', 'X-CSRFToken': document.cookie.split('; ').filter(row => row.startsWith('session_id=')).map(c => c.split('=')[1])[0]}, withCredentials: true });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -216,22 +216,22 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version v1
  * @license BSD License
  * @termsOfService https://www.google.com/policies/terms/
- * @baseUrl http://127.0.0.1:8000
+ * @baseUrl http://localhost:8000
  * @contact <mikhailvolvach@gmail.com>
  *
  * Encryption API
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
-  data = {
+  api = {
     /**
      * No description
      *
-     * @tags data
-     * @name DataList
-     * @request GET:/data/
+     * @tags api
+     * @name ApiDataList
+     * @request GET:/api/data
      * @secure
      */
-    dataList: (
+    apiDataList: (
       query?: {
         /** A search term. */
         search?: string;
@@ -239,7 +239,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<void, any>({
-        path: `/data/`,
+        path: `/api/data`,
         method: "GET",
         query: query,
         secure: true,
@@ -249,14 +249,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags data
-     * @name DataCreate
-     * @request POST:/data/
+     * @tags api
+     * @name ApiDataCreate
+     * @request POST:/api/data
      * @secure
      */
-    dataCreate: (data: DataItem, params: RequestParams = {}) =>
+    apiDataCreate: (data: DataItem, params: RequestParams = {}) =>
       this.request<DataItem, any>({
-        path: `/data/`,
+        path: `/api/data`,
         method: "POST",
         body: data,
         secure: true,
@@ -267,14 +267,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags data
-     * @name DataRead
-     * @request GET:/data/{id}/
+     * @tags api
+     * @name ApiDataRead
+     * @request GET:/api/data/{id}
      * @secure
      */
-    dataRead: (id: string, params: RequestParams = {}) =>
+    apiDataRead: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/data/${id}/`,
+        path: `/api/data/${id}`,
         method: "GET",
         secure: true,
         ...params,
@@ -283,14 +283,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags data
-     * @name DataUpdate
-     * @request PUT:/data/{id}/
+     * @tags api
+     * @name ApiDataUpdate
+     * @request PUT:/api/data/{id}
      * @secure
      */
-    dataUpdate: (id: string, data: DataItem, params: RequestParams = {}) =>
+    apiDataUpdate: (id: string, data: DataItem, params: RequestParams = {}) =>
       this.request<DataItem, any>({
-        path: `/data/${id}/`,
+        path: `/api/data/${id}`,
         method: "PUT",
         body: data,
         secure: true,
@@ -301,14 +301,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags data
-     * @name DataDelete
-     * @request DELETE:/data/{id}/
+     * @tags api
+     * @name ApiDataDelete
+     * @request DELETE:/api/data/{id}
      * @secure
      */
-    dataDelete: (id: string, params: RequestParams = {}) =>
+    apiDataDelete: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/data/${id}/`,
+        path: `/api/data/${id}`,
         method: "DELETE",
         secure: true,
         ...params,
@@ -317,14 +317,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags data
-     * @name DataAddToRequestCreate
-     * @request POST:/data/{id}/add-to-request/
+     * @tags api
+     * @name ApiDataAddToRequestCreate
+     * @request POST:/api/data/{id}/add-to-request/
      * @secure
      */
-    dataAddToRequestCreate: (id: string, params: RequestParams = {}) =>
+    apiDataAddToRequestCreate: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/data/${id}/add-to-request/`,
+        path: `/api/data/${id}/add-to-request/`,
         method: "POST",
         secure: true,
         ...params,
@@ -333,99 +333,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags data
-     * @name DataDeleteFromRequestDelete
-     * @request DELETE:/data/{id}/delete-from-request/
+     * @tags api
+     * @name ApiDataDeleteFromRequestDelete
+     * @request DELETE:/api/data/{id}/delete-from-request/
      * @secure
      */
-    dataDeleteFromRequestDelete: (id: string, params: RequestParams = {}) =>
+    apiDataDeleteFromRequestDelete: (id: string, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/data/${id}/delete-from-request/`,
-        method: "DELETE",
-        secure: true,
-        ...params,
-      }),
-  };
-  encryptionRequests = {
-    /**
-     * No description
-     *
-     * @tags encryption-requests
-     * @name EncryptionRequestsList
-     * @request GET:/encryption-requests/
-     * @secure
-     */
-    encryptionRequestsList: (params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/encryption-requests/`,
-        method: "GET",
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags encryption-requests
-     * @name EncryptionRequestsFormUpdate
-     * @request PUT:/encryption-requests/form/
-     * @secure
-     */
-    encryptionRequestsFormUpdate: (data: DataEncryptionRequest, params: RequestParams = {}) =>
-      this.request<DataEncryptionRequest, any>({
-        path: `/encryption-requests/form/`,
-        method: "PUT",
-        body: data,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags encryption-requests
-     * @name EncryptionRequestsRead
-     * @request GET:/encryption-requests/{id}/
-     * @secure
-     */
-    encryptionRequestsRead: (id: string, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/encryption-requests/${id}/`,
-        method: "GET",
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags encryption-requests
-     * @name EncryptionRequestsUpdate
-     * @request PUT:/encryption-requests/{id}/
-     * @secure
-     */
-    encryptionRequestsUpdate: (id: string, data: DataEncryptionRequest, params: RequestParams = {}) =>
-      this.request<DataEncryptionRequest, any>({
-        path: `/encryption-requests/${id}/`,
-        method: "PUT",
-        body: data,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags encryption-requests
-     * @name EncryptionRequestsDelete
-     * @request DELETE:/encryption-requests/{id}/
-     * @secure
-     */
-    encryptionRequestsDelete: (id: string, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/encryption-requests/${id}/`,
+        path: `/api/data/${id}/delete-from-request/`,
         method: "DELETE",
         secure: true,
         ...params,
@@ -434,18 +349,183 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags encryption-requests
-     * @name EncryptionRequestsChangeStatusUpdate
-     * @request PUT:/encryption-requests/{id}/change-status/
+     * @tags api
+     * @name ApiEncryptionRequestsList
+     * @request GET:/api/encryption-requests/
      * @secure
      */
-    encryptionRequestsChangeStatusUpdate: (id: string, data: DataEncryptionRequest, params: RequestParams = {}) =>
+    apiEncryptionRequestsList: (
+      query?: {
+        start_date?: string;
+        end_date?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/encryption-requests/`,
+        method: "GET",
+        query: query,
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags api
+     * @name ApiEncryptionRequestsFormUpdate
+     * @request PUT:/api/encryption-requests/form/
+     * @secure
+     */
+    apiEncryptionRequestsFormUpdate: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/encryption-requests/form/`,
+        method: "PUT",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags api
+     * @name ApiEncryptionRequestsRead
+     * @request GET:/api/encryption-requests/{id}
+     * @secure
+     */
+    apiEncryptionRequestsRead: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/encryption-requests/${id}`,
+        method: "GET",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags api
+     * @name ApiEncryptionRequestsUpdate
+     * @request PUT:/api/encryption-requests/{id}
+     * @secure
+     */
+    apiEncryptionRequestsUpdate: (id: string, data: DataEncryptionRequest, params: RequestParams = {}) =>
       this.request<DataEncryptionRequest, any>({
-        path: `/encryption-requests/${id}/change-status/`,
+        path: `/api/encryption-requests/${id}`,
         method: "PUT",
         body: data,
         secure: true,
+        type: ContentType.Json,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags api
+     * @name ApiEncryptionRequestsDelete
+     * @request DELETE:/api/encryption-requests/{id}
+     * @secure
+     */
+    apiEncryptionRequestsDelete: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/encryption-requests/${id}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Метод изменения статуса заявки
+     *
+     * @tags api
+     * @name ApiEncryptionRequestsChangeStatusUpdate
+     * @request PUT:/api/encryption-requests/{id}/change-status/
+     * @secure
+     */
+    apiEncryptionRequestsChangeStatusUpdate: (
+      id: string,
+      data: {
+        status: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<
+        {
+          status: string;
+        },
+        any
+      >({
+        path: `/api/encryption-requests/${id}/change-status/`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description Метод авторизации
+     *
+     * @tags api
+     * @name ApiLoginCreate
+     * @request POST:/api/login
+     * @secure
+     */
+    apiLoginCreate: (
+      data: {
+        username: string;
+        password: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<
+        {
+          username: string;
+          password: string;
+        },
+        any
+      >({
+        path: `/api/login`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags api
+     * @name ApiLogoutCreate
+     * @request POST:/api/logout
+     * @secure
+     */
+    apiLogoutCreate: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/logout`,
+        method: "POST",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags api
+     * @name ApiUserAuthList
+     * @request GET:/api/user-auth
+     * @secure
+     */
+    apiUserAuthList: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/user-auth`,
+        method: "GET",
+        secure: true,
         ...params,
       }),
   };

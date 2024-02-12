@@ -1,6 +1,6 @@
 import {DataItemResType, DataListResType} from "config/types.ts";
 
-const mockData: DataListResType = {
+const mockData = {
   "request_id": 4,
   "data": [
     {
@@ -50,6 +50,7 @@ const mockData: DataListResType = {
     }
   ]
 }
+
 
 export const getMockDataList = () : DataListResType => {
   return mockData;
