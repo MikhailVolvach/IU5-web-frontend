@@ -1,54 +1,45 @@
-import {Button, Container, Form, OverlayTrigger, Popover, Row, Table} from "react-bootstrap";
+import {Button, Container, Form, Modal, Row, Table} from "react-bootstrap";
 import Header from "layout/Header";
 import { useAppDispatch } from "store/hooks";
 import {FC, useCallback, useEffect, useState} from "react";
-import { getEncryptionRequestsList, useEncryptionRequestsList } from "store/encryptionRequestsList";
+import { getEncryptionRequestsList, useEncryptionRequestsList, setDateStart, setDateEnd } from "store/encryptionRequestsList";
 import { useNavigate } from "react-router-dom";
 import {useUserAuth} from "store/userAuth";
 import {useUsersList} from "store/usersList/selectors.ts";
 import {usersList} from "store/usersList";
 import {DataEncryptionRequestModel} from "store/models.ts";
-import {getEncryptionRequestsListDate} from "store/encryptionRequestsList/getEncryptionRequestsList.ts";
-
-// interface IPopover {
-//     list: EncryptionUser[];
-// }
-
 
 interface IDateInputModal {
     title: string;
-    callback: (dateStart: Date, dateEnd: Date) => void;
-    startDate: Date;
-    endDate: Date;
+    callback: (ds: string, de: string, isShow: boolean) => void;
+    startDate: string;
+    endDate: string;
+    isShow: boolean;
 }
-const DateInputModal : FC<IDateInputModal> = ({ title, callback, startDate, endDate }) => {
-    // const minStartTime = new Date();
-    // minStartTime.setHours(0);
-    // minStartTime.setMinutes(0);
-    // minStartTime.setSeconds(0);
-    // minStartTime.setMilliseconds(0);
-    // console.log(minStartTime);
 
-
-    const [ dateStart, setDateStart ] = useState<Date>(startDate);
-    const [ dateEnd, setDateEnd ] = useState<Date>(endDate);
+const DateInputModal : FC<IDateInputModal> = ({ title, callback, startDate, endDate, isShow }) => {
+    const [ ds, setDs ] = useState<string>(startDate);
+    const [ de, setDe ] = useState<string>(endDate);
     const handleDateSet = useCallback((event) => {
         event.preventDefault();
-        callback(dateStart, dateEnd);
-    }, [dateStart, dateEnd]);
+        callback(ds, de, false);
+    }, [ds, de]);
 
     return (
-      <Popover style={{minWidth: '340px'}}>
-          <Popover.Header as="h3">{title}</Popover.Header>
-          <Popover.Body style={{width: '340px'}}>
-              <Form onSubmit={handleDateSet}>
-                  <Form.Group controlId="datePicker" className={'d-flex align-items-center'}>
-                      <Form.Control value={dateStart.toISOString().split('T')[0]} onChange={(event) => setDateStart(new Date(event.target.value))} type="date" />&nbsp;—&nbsp;<Form.Control value={dateEnd.toISOString().split('T')[0]} onChange={(event) => setDateEnd(new Date(event.target.value))} type="date" />
-                  </Form.Group>
-                  <Button type={'submit'} variant={'success'}>Применить</Button>
-              </Form>
-          </Popover.Body>
-      </Popover>
+      <Modal show={isShow} onHide={() => callback(ds, de, false)}>
+              <Modal.Header closeButton>
+                  <Modal.Title>{title}</Modal.Title>
+              </Modal.Header>
+
+              <Modal.Body>
+                  <Form onSubmit={handleDateSet}>
+                      <Form.Group controlId="datePicker" className={'d-flex align-items-center mb-2'}>
+                          <Form.Control value={ds.split('T')[0]} onChange={(event) => setDs(new Date(event.target.value).toISOString())} type="date" />&nbsp;—&nbsp;<Form.Control value={de.split('T')[0]} onChange={(event) => setDe(new Date(event.target.value).toISOString())} type="date" />
+                      </Form.Group>
+                      <Button type={'submit'} variant={'success'}>Применить</Button>
+                  </Form>
+              </Modal.Body>
+      </Modal>
     )
 }
 
@@ -57,13 +48,13 @@ const RequestsListPage = () => {
     const navigate = useNavigate();
 
     const {role } = useUserAuth();
-    const {requests} = useEncryptionRequestsList();
+    const {requests, dateStart, dateEnd} = useEncryptionRequestsList();
     const { users } = useUsersList();
 
     const [userSelect, setUserSelect] = useState<'Создатель' | string>('Создатель');
     const [ requestsList, setRequestsList ] = useState<DataEncryptionRequestModel[]>(requests || []);
-    const [ creationDateFilter, setCreationDateFilter ] = useState<{start: Date, end: Date}>({start: new Date(0), end: new Date()});
-    const [ formationDateFilter, setFormationDateFilter ] = useState<{start: Date, end: Date}>({start: new Date(0), end: new Date()});
+    const [ creationDateFilter, setCreationDateFilter ] = useState<{start: string, end: string}>({start: new Date(dateStart).toISOString(), end: new Date(dateEnd).toISOString()});
+    const [ showModal, setShowModal ] = useState(false);
 
     const handleRowClick = useCallback((orderId: number | undefined) => {
         navigate(`/request/${orderId}`);
@@ -76,7 +67,7 @@ const RequestsListPage = () => {
 
         const intervalId = setInterval(fetchData, 1000);
 
-        dispatch(usersList());
+        if (!!role && role !== 1) dispatch(usersList());
 
         return () => clearInterval(intervalId);
     }, [dispatch, creationDateFilter]);
@@ -93,15 +84,16 @@ const RequestsListPage = () => {
         setUserSelect(event.target.value);
     }, []);
 
-    const handleCreationDateFilter = useCallback((start: Date, end: Date) => {
+    const handleCreationDateFilter = useCallback((start: string, end: string, isShow: boolean) => {
+        dispatch(setDateStart(start));
+        dispatch(setDateEnd(end));
+        setShowModal(isShow);
         setCreationDateFilter({start: start, end: end});
-        // console.log(start, end);
     }, []);
 
-    // const handleFormationDateFilter = useCallback((start: Date, end: Date) => {
-    //     setFormationDateFilter({start: start, end: end});
-    //     console.log(start, end);
-    // }, []);
+    const handleModalOpen = useCallback(() => {
+        setShowModal(true);
+    }, []);
 
     const dataToShow = userSelect === 'Создатель' ? requests : requestsList;
 
@@ -122,16 +114,9 @@ const RequestsListPage = () => {
                                 </Form.Select>
                             </th>}
                             <th>
-                                <OverlayTrigger trigger="click" placement="bottom" overlay={() => <DateInputModal startDate={creationDateFilter.start} endDate={creationDateFilter.end} callback={handleCreationDateFilter} title={'Дата создания'} />}>
-                                    <Button variant="link">Дата создания</Button>
-                                </OverlayTrigger>
+                                <Button variant="link" onClick={handleModalOpen}>Дата создания</Button>
                             </th>
-                            <th>
-                                {/*<OverlayTrigger trigger="click" placement="bottom" overlay={() => <DateInputModal startDate={formationDateFilter.start} endDate={formationDateFilter.end} callback={handleFormationDateFilter} title={'Дата изменения'} />}>*/}
-                                {/*    <Button variant="link">Дата изменения</Button>*/}
-                                {/*</OverlayTrigger>*/}
-                                Дата изменения
-                                </th>
+                            <th>Дата изменения</th>
                             <th>Действие</th>
                             <th>Статус</th>
                         </tr>
@@ -148,6 +133,7 @@ const RequestsListPage = () => {
                     </tbody>
                 </Table>
             </Row>
+            <DateInputModal startDate={creationDateFilter.start} endDate={creationDateFilter.end} callback={handleCreationDateFilter} title={'Дата создания'} isShow={showModal} />
         </Container>
     );
 }

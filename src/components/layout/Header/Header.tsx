@@ -9,6 +9,7 @@ import Login from 'layout/Login';
 import { useAppDispatch } from 'store/hooks';
 import Icon from 'ui/Icon';
 import { EWorkStatus } from 'store/enums';
+import {useDataList} from "store/dataList";
 
 interface IHeader extends PropsWithChildren {
   bg?: EBootstrapColor;
@@ -20,6 +21,10 @@ const Header: FC<IHeader> = memo(({ bg = EBootstrapColor.LIGHT, fluid = EBootstr
   const navigate = useNavigate();
 
   const { isLogin, username, cookie, draftId, role } = useUserAuth();
+
+  //Для теста
+  const { orderId } = useDataList();
+
   const { requestStatus } = useEncryptionRequestItem();
 
   const [showLogin, setShowLogin] = useState<boolean>(false);
@@ -36,14 +41,15 @@ const Header: FC<IHeader> = memo(({ bg = EBootstrapColor.LIGHT, fluid = EBootstr
   const isDraftExists: Boolean = !!(requestStatus === EWorkStatus.DRAFT || draftId);
 
   const handleDraftLinkClick = useCallback(() => {
-    navigate('/draft-request');
-  }, []);
+    // navigate(`/request/${draftId}`);
+    navigate(`/request/${orderId}`);
+  }, [orderId, draftId]);
 
   useEffect(() => {
     if (cookie) {
       dispatch(authUser());
     }
-  }, [cookie]);
+  }, [cookie, orderId, draftId]);
 
   return (
     <header className='w-100 px-0 mb-3'>
@@ -57,7 +63,8 @@ const Header: FC<IHeader> = memo(({ bg = EBootstrapColor.LIGHT, fluid = EBootstr
           {children && <Navbar.Collapse id="basic-navbar-nav">{children}</Navbar.Collapse>}
 
           {isLogin && role === 1 && <Button disabled={!isDraftExists} onClick={handleDraftLinkClick} className={'d-flex rounded-3 justify-content-center align-content-center'} variant={'outline-' + EBootstrapColor.PRIMARY}>
-            <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={ICON_SIZE} className="d-flex align-content-center me-2" />Заявка
+            <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={ICON_SIZE} className="d-flex align-content-center me-2" />Заявка №{draftId}
+            {/*  <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={ICON_SIZE} className="d-flex align-content-center me-2" />Заявка №{orderId}*/}
           </Button>}
 
           {isLogin && <ButtonToolbar className={'d-flex align-content-center'}>

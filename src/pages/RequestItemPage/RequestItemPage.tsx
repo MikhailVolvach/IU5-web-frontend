@@ -1,77 +1,58 @@
-import { FC, memo, useCallback, useEffect, useState } from "react";
-import {Container, Row, Nav, ButtonGroup, Button, Col, Form} from "react-bootstrap";
+import { memo, useCallback, useEffect } from "react";
+import {Container, Row, ButtonGroup, Button, Col, Form} from "react-bootstrap";
 import Header from 'layout/Header';
 import { useAppDispatch } from 'store/hooks';
 import { getEncryptionRequestItem, formRequestItem, deleteRequestItem, useEncryptionRequestItem } from "store/encryptionRequestItem";
 import { EWorkStatus } from 'store/enums';
-import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import RequestItemPageData from './components/RequestItemPageData';
 import RequestItemPageInfo from './components/RequestItemPageInfo';
 import { useUserAuth } from "store/userAuth";
 import {changeReqStatus} from "store/encryptionRequestItem/getEncryptionRequestItem.ts";
 
-interface IRequestItemPage {
-    orderId?: string;
-}
-
-const RequestItemPage : FC<IRequestItemPage> = memo(({orderId = '-1'}) => {
+const RequestItemPage = memo(() => {
+    const { id } = useParams();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { draftId, role } = useUserAuth();
+    const { role , draftId} = useUserAuth();
     const { requestStatus } = useEncryptionRequestItem();
 
-    const id = (orderId && orderId !== '-1') ? orderId : draftId;
+    const currentId = !!id && id !== '-1' ? id : draftId;
 
     useEffect(() => {
         const fetchData = async () => {
-            dispatch(getEncryptionRequestItem(id));
+            dispatch(getEncryptionRequestItem(currentId));
         }
-        
-        if (!id || +id === -1) return;
+
+        console.log(currentId);
+        if (!currentId || +currentId === -1) return;
         
         fetchData();
-    }, [id]);
-
-    const [selectedTab, setSelectedTab] = useState('info');
-
-    //@ts-ignore
-    const handleSelect = useCallback((e) => {
-        setSelectedTab(e);
-        navigate(e);
-    }, []);
+    }, [currentId, dispatch]);
 
     const formRequest = useCallback(() => {
       dispatch(formRequestItem());
       navigate('/');
-    }, []);
+    }, [currentId, dispatch]);
     
     const deleteRequest = useCallback(() => {
-        dispatch(deleteRequestItem(id));
-        navigate('/');
-    }, [id]);
+      if (!currentId || +currentId === -1) return;
+      dispatch(deleteRequestItem(currentId));
+      navigate('/');
+    }, [currentId, dispatch]);
 
-    const setReqStatus = useCallback((event) => {
-        // console.log(event.target.value);
-        console.log(id);
-        dispatch(changeReqStatus({id: id, status: event.target.value}));
-    }, []);
+    // @ts-ignore
+  const setReqStatus = useCallback((event) => {
+      if (!currentId || +currentId === -1) return;
+      dispatch(changeReqStatus({id: currentId, status: event.target.value}));
+    }, [currentId, dispatch]);
 
     return (
         <Container>
             <Row>
                 <Header />
             </Row>
-            <Row>
-                <Col className={'ps-0'}>
-                    <Nav variant="tabs" defaultActiveKey='info' activeKey={selectedTab} onSelect={handleSelect}>
-                        <Nav.Item>
-                            <Nav.Link eventKey='info' onClick={(e) => {e.preventDefault()}}>Информация о заявке</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey='service-list'>Список услуг</Nav.Link>
-                        </Nav.Item>
-                    </Nav>
-                </Col>
+            <Row className={'d-flex justify-content-end'}>
                 {requestStatus === EWorkStatus.DRAFT && role === 1 && <Col sm={'auto'} className={'d-flex justify-content-end pe-0'}>
                     <ButtonGroup>
                         <Button onClick={formRequest} variant={'success'}>Сформировать</Button>
@@ -85,11 +66,10 @@ const RequestItemPage : FC<IRequestItemPage> = memo(({orderId = '-1'}) => {
                 </Col>}
             </Row>
             <Row>
-                <Routes>
-                    <Route path={'info'} element={<RequestItemPageInfo />} />
-                    <Route path={'service-list'} element={<RequestItemPageData />} />
-                    <Route index element={<Navigate to='info' />}/>
-                </Routes>
+                <RequestItemPageInfo />
+            </Row>
+            <Row>
+                <RequestItemPageData />
             </Row>
         </Container>
     );

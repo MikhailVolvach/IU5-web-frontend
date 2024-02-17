@@ -76,12 +76,12 @@ const encryptionRequestItemSlice = createSlice({
       .addCase(deleteItemFromRequest.pending, (state) => {
         state.isLoaded = false;
       })
-      .addCase(deleteItemFromRequest.fulfilled, (state, action) => {
-        state.request = EncryptionRequestSerializer(action.payload.request);
-        state.requestData = action.payload.data.map((dataItem) => DataItemSerializer(dataItem));
-        state.user = action.payload.owner;
+      .addCase(deleteItemFromRequest.fulfilled, (state) => {
+        state.request = {} as DataEncryptionRequestModel;
+        state.requestData = [] as DataItemModel[];
+        state.user = "";
+        state.requestStatus = null;
         state.isLoaded = true;
-        state.requestStatus = getWorkStatus(action.payload.request.work_status || EWorkStatus.DRAFT);
       })
       .addCase(deleteItemFromRequest.rejected, (state) => {
         state.isLoaded = true;

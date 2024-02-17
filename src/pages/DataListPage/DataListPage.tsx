@@ -10,7 +10,7 @@ import { getListPageData, useDataList } from 'store/dataList';
 import { useAppDispatch } from 'store/hooks';
 import {Badge, Button, Card, Col} from "react-bootstrap";
 import {EIsEncrypted} from "store/enums.ts";
-import {addItemToRequest} from "store/encryptionRequestItem";
+import {addItemToRequest, useEncryptionRequestItem} from "store/encryptionRequestItem";
 import {Link} from "react-router-dom";
 
 export interface IDataListPage {
@@ -20,6 +20,9 @@ export interface IDataListPage {
 
 const DataListPage : FC<IDataListPage> = memo(({searchQuery = '', searchQueryChange = () => null}) => {
   const dispatch = useAppDispatch();
+
+  const { data, orderId } = useDataList();
+  const { requestData } = useEncryptionRequestItem();
 
   const [searchValue, setSearchValue] = useState<string>("");
 
@@ -34,6 +37,7 @@ const DataListPage : FC<IDataListPage> = memo(({searchQuery = '', searchQueryCha
   }, []);
 
   const fetchData = async () => {
+    console.log('fetchData', orderId, searchQuery);
     dispatch(getListPageData(searchQuery));
   }
 
@@ -41,13 +45,13 @@ const DataListPage : FC<IDataListPage> = memo(({searchQuery = '', searchQueryCha
     // TODO: Добавить обработку некорректного добавления
     if (!id) return;
     dispatch(addItemToRequest(`${id}`));
-  }, []);
+    // fetchData();
+  }, [orderId]);
 
   useEffect(() => {
     fetchData();
-  }, [searchQuery, dispatch]);
+  }, [orderId, requestData, searchQuery, dispatch]);
 
-  const { data } = useDataList();
 
   return (
     <Container fluid={fluid}>

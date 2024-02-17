@@ -60,13 +60,6 @@ const RequestItemPageData : FC = memo(() => {
     }
 
     setData(requestData.filter((value) => value.isEncrypted === statusSelect).filter((value) => value.dataType === typeSelect));
-    //
-    // if (statusSelect === 0) {
-    //   setData(requestData);
-    // } else {
-    //   setData(requestData.filter((value) => value.isEncrypted === statusSelect));
-    // }
-    //
   }, [statusSelect, typeSelect, requestData.length]);
 
   const handleCheckboxChange = useCallback((index: number) => {

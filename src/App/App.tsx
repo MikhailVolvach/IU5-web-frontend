@@ -4,7 +4,6 @@ import DataListPage from "pages/DataListPage";
 import DataItemPage from "pages/DataItemPage";
 import {useCallback, useEffect} from "react";
 import RequestItemPage from "pages/RequestItemPage";
-import RequestItemPageWithId from "pages/RequestItemPageWithId";
 import RequestsListPage from "pages/RequestsListPage";
 import {authUser, useUserAuth} from "store/userAuth";
 import {useAppDispatch} from "store";
@@ -44,8 +43,7 @@ function App() {
           path='/data/:id'
           element={<DataItemPage />}
         />
-        <Route path='/request/:id/*' element={ <RequestItemPageWithId /> } />
-        <Route path='/draft-request/*' element={ <RequestItemPage /> }/>
+        <Route path='/request/:id' element={ <RequestItemPage /> } />
         <Route path='/requests' element={ <RequestsListPage /> }/>
       </Routes>
   )
