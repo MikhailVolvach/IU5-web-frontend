@@ -63,7 +63,7 @@ const Header: FC<IHeader> = memo(({ bg = EBootstrapColor.LIGHT, fluid = EBootstr
           {children && <Navbar.Collapse id="basic-navbar-nav">{children}</Navbar.Collapse>}
 
           {isLogin && role === 1 && <Button disabled={!isDraftExists} onClick={handleDraftLinkClick} className={'d-flex rounded-3 justify-content-center align-content-center'} variant={'outline-' + EBootstrapColor.PRIMARY}>
-            <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={ICON_SIZE} className="d-flex align-content-center me-2" />Заявка №{draftId}
+            <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={ICON_SIZE} className="d-flex align-content-center me-2" />Заявка
             {/*  <Icon iconName={isDraftExists ? 'FolderFill' : 'Folder'} size={ICON_SIZE} className="d-flex align-content-center me-2" />Заявка №{orderId}*/}
           </Button>}
 

@@ -17,7 +17,7 @@ const ModeratorPage = memo(() => {
   const { data } = useDataList();
 
   const [ showModal, setShowModal ] = useState(false);
-  const [ currentDataItem, setCurrentDataItem ] = useState<DataItemModel>({});
+  const [ currentDataItem, setCurrentDataItem ] = useState<DataItemModel>({} as DataItemModel);
   const [ operation, setOperation ] = useState<'CHANGE' | 'ADD'>('CHANGE');
   const [ reload, setReload ] = useState<boolean>(false);
 
@@ -25,10 +25,10 @@ const ModeratorPage = memo(() => {
     dispatch(getListPageData());
   }, [dispatch, reload]);
 
-  const urlCellStyle = {
-    'overflow': 'scroll visible',
-    'whiteSpace': 'nowrap',
-  }
+  // const urlCellStyle = {
+  //   'overflow': 'scroll visible',
+  //   'whiteSpace': 'nowrap',
+  // }
 
   const handleOpenModal = useCallback((dataItem : DataItemModel = {} as DataItemModel) => {
     if (!!dataItem.id) {
@@ -47,9 +47,11 @@ const ModeratorPage = memo(() => {
     setCurrentDataItem({} as DataItemModel);
   }, []);
 
+  // @ts-ignore
   const handleFormInputChange = useCallback((event) => {
     const { name, value, type, checked, files } = event.target;
 
+    // @ts-ignore
     let newValue = null;
 
     if (name === 'is_encrypted') {
@@ -64,10 +66,8 @@ const ModeratorPage = memo(() => {
       newValue = value;
     }
 
-    setCurrentDataItem(prevState => ({
-      ...prevState,
-      [name]: newValue
-    }));
+    // @ts-ignore
+    setCurrentDataItem(prevState => ({...prevState, [name]: newValue}));
 
     // console.log(currentDataItem);
   }, [currentDataItem])
@@ -87,7 +87,7 @@ const ModeratorPage = memo(() => {
     handleCloseModal();
   }, [currentDataItem]);
 
-  const handleDeleteButton = useCallback((event) => {
+  const handleDeleteButton = useCallback(() => {
     dispatch(deleteDataItem(currentDataItem.id));
     setReload(!reload);
     handleCloseModal();
@@ -139,14 +139,14 @@ const ModeratorPage = memo(() => {
               <Form.Label>Изображение</Form.Label>
               <InputGroup>
                 <Form.Control name={'img'} onChange={handleFormInputChange} type='file' />
-                {!!currentDataItem.img && <InputGroup.Text style={urlCellStyle}>{currentDataItem.img}</InputGroup.Text>}
+                {!!currentDataItem.img && <InputGroup.Text style={{overflow: 'hidden'}}>{currentDataItem.img}</InputGroup.Text>}
               </InputGroup>
             </Form.Group>
             <Form.Group className={'mt-3'}>
               <Form.Label>Файл</Form.Label>
               <InputGroup>
                 <Form.Control name={'file'} onChange={handleFormInputChange} type='file' />
-                {!!currentDataItem.file && <InputGroup.Text style={urlCellStyle}>{currentDataItem.file}</InputGroup.Text>}
+                {!!currentDataItem.file && <InputGroup.Text style={{overflow: 'hidden'}}>{currentDataItem.file}</InputGroup.Text>}
               </InputGroup>
 
             </Form.Group>

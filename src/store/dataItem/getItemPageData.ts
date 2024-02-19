@@ -26,6 +26,7 @@ export const changeDataItem = createAsyncThunk<DataItem, { id: number, itemData:
         console.error('Ошибка при загрузке изображения:', error);
       });
   } else {
+    // @ts-ignore
     formData.append('img', item.itemData.img);
   }
 
@@ -39,9 +40,10 @@ export const changeDataItem = createAsyncThunk<DataItem, { id: number, itemData:
         console.error('Ошибка при загрузке файла:', error);
       });
   } else {
+    // @ts-ignore
     formData.append('file', item.itemData.file);
   }
-
+  // @ts-ignore
   return api.api.apiDataUpdate(`${item.id}`, formData).then(({data}) => data).catch(e => Error(e));
 });
 

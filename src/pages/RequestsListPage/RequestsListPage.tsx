@@ -20,6 +20,7 @@ interface IDateInputModal {
 const DateInputModal : FC<IDateInputModal> = ({ title, callback, startDate, endDate, isShow }) => {
     const [ ds, setDs ] = useState<string>(startDate);
     const [ de, setDe ] = useState<string>(endDate);
+    // @ts-ignore
     const handleDateSet = useCallback((event) => {
         event.preventDefault();
         callback(ds, de, false);
@@ -79,7 +80,7 @@ const RequestsListPage = () => {
             setRequestsList(requests.filter(item => item.user === userSelect));
         }
     }, [userSelect]);
-
+    // @ts-ignore
     const handleUserSelect = useCallback((event) => {
         setUserSelect(event.target.value);
     }, []);

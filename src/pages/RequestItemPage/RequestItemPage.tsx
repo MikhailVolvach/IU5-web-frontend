@@ -47,7 +47,7 @@ const RequestItemPage = memo(() => {
       dispatch(changeReqStatus({id: currentId, status: event.target.value}));
     }, [currentId, dispatch]);
 
-    return (
+  return (
         <Container>
             <Row>
                 <Header />
@@ -60,6 +60,7 @@ const RequestItemPage = memo(() => {
                     </ButtonGroup>
                 </Col>}
                 {role !== 1 && <Col sm={'auto'} className={'d-flex justify-content-end pe-0'}>
+                    {/*@ts-ignore*/}
                     <Form.Select value={requestStatus} onChange={setReqStatus}>
                         {Object.values(EWorkStatus).map(status => <option value={status}>{status}</option>)}
                     </Form.Select>
